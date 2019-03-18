@@ -50,27 +50,29 @@ class ChangeTextBehaviorTest {
     var activityRule = InjectionActivityTestRule(viewModelInjector, JobSearchActivity::class.java)
 
 
-
     @Test
     fun showSingleJob() {
-        onView(withText("Try Searching")).check(matches(isDisplayed()));
+        onView(withText("Try Searching")).check(matches(isDisplayed()))
 
-        fakeGithubClient.searchJobs= listOf(JOB1)
+        fakeGithubClient.searchJobs = listOf(JOB1)
 
         onView(withId(R.id.searchBtn))
             .perform(click())
 
 
-        onView(withId(R.id.jobList)).perform(RecyclerViewActions.scrollToPosition<JobListAdapter.JobViewHolder>(0));
-        onView(withText(JOB1.title)).check(matches(isDisplayed()));
-        onView(withText(JOB1.company)).check(matches(isDisplayed()));
+        onView(withId(R.id.jobList)).perform(RecyclerViewActions.scrollToPosition<JobListAdapter.JobViewHolder>(0))
+        onView(withText(JOB1.title)).check(matches(isDisplayed()))
+        onView(withText(JOB1.company)).check(matches(isDisplayed()))
 
 
-        //searchJobs.onNext(listOf(JOB1,JOB2,JOB3,JOB4,JOB5,JOB6,JOB7,JOB8,JOB9,JOB10))
+        fakeGithubClient.searchJobs = listOf(JOB1, JOB2)
 
-        onView(withId(R.id.jobList)).perform(RecyclerViewActions.scrollToPosition<JobListAdapter.JobViewHolder>(9));
-        onView(withText(JOB10.title)).check(matches(isDisplayed()));
-        onView(withText(JOB10.company)).check(matches(isDisplayed()));
+        onView(withId(R.id.searchBtn))
+            .perform(click())
+
+        onView(withId(R.id.jobList)).perform(RecyclerViewActions.scrollToPosition<JobListAdapter.JobViewHolder>(2))
+        onView(withText(JOB2.title)).check(matches(isDisplayed()))
+        onView(withText(JOB2.company)).check(matches(isDisplayed()))
 
 
     }

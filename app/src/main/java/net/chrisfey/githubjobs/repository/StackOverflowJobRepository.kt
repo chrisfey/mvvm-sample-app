@@ -1,9 +1,9 @@
 package net.chrisfey.stackOverflowjobs.repository
 
 import io.reactivex.Observable
+import net.chrisfey.githubjobs.repository.networking.RssJob
 import net.chrisfey.githubjobs.repository.networking.ScrapedStackOverflowJobResponse
 import net.chrisfey.githubjobs.repository.networking.StackOverflowRssFeedJobHttpClient
-import net.chrisfey.githubjobs.repository.networking.StackOverflowRssFeedResponse
 import net.chrisfey.githubjobs.repository.networking.StackOverflowScreenScrapeJobHttpClient
 
 
@@ -23,7 +23,7 @@ class StackOverflowJobRepository(
                     .toObservable()
             }
 
-    private fun enrichWithImage(rssJob: StackOverflowRssFeedResponse.Channel.RssJob) =
+    private fun enrichWithImage(rssJob: RssJob) =
         viewJob(rssJob.link!!)
             .map { rssJob.toStackOverflowJob(it) }
 
@@ -33,7 +33,7 @@ class StackOverflowJobRepository(
     }
 }
 
-private fun StackOverflowRssFeedResponse.Channel.RssJob.toStackOverflowJob(scrapedJob: ScrapedStackOverflowJobResponse? = null) =
+private fun RssJob.toStackOverflowJob(scrapedJob: ScrapedStackOverflowJobResponse? = null) =
     StackOverflowJob(
         link = link,
         title = title,

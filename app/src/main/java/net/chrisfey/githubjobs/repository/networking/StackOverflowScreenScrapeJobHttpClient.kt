@@ -13,6 +13,6 @@ interface StackOverflowScreenScrapeJobHttpClient {
 }
 
 
-class ScrapedStackOverflowJobResponse{
+data class ScrapedStackOverflowJobResponse(
     @Selector(value = "div.s-avatar img", attr = "src") val companyImage: String? = null
-}
+)

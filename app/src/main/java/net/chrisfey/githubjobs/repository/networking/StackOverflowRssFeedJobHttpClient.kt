@@ -12,24 +12,26 @@ interface StackOverflowRssFeedJobHttpClient {
 }
 
 
-class StackOverflowRssFeedResponse{
-    val channel : Channel? = null
+data class StackOverflowRssFeedResponse(
+    val channel: Channel? = null
+)
 
-    class Channel{
-        @JacksonXmlElementWrapper(useWrapping = false)
-        val item : List<RssJob>? = null
-        class RssJob{
-            val link:String? = null
-            val title:String? = null
-            val description:String? = null
-            val author: Author? = null
-            class Author{
-                val name: String? = null
-            }
-        }
-    }
+data class Channel (
+    @JacksonXmlElementWrapper(useWrapping = false) val item: List<RssJob>? = null
+)
+    class RssJob (
+        val link: String? = null,
+        val title: String? = null,
+        val description: String? = null,
+        val author: Author? = null
 
 
+)
+
+data class Author (
+    val name: String? = null
+)
 
 
-}
+
+

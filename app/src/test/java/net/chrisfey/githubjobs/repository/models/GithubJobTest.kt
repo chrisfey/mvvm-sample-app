@@ -1,6 +1,6 @@
 package net.chrisfey.githubjobs.repository.models
 
-import net.chrisfey.githubjobs.repository.networking.GithubJob
+import net.chrisfey.githubjobs.repository.networking.GithubJobResponse
 import net.chrisfey.githubjobs.utils.Jackson
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -8,7 +8,7 @@ import org.junit.Test
 class GithubJobTest {
     @Test
     fun deserialiseTest() {
-        val deserialised = Jackson.mapper.readValue(GITHUBJOB1, GithubJob::class.java)
+        val deserialised = Jackson.mapper.readValue(GITHUBJOB1, GithubJobResponse::class.java)
 
         assertThat(deserialised.company).isEqualTo("Angel")
         assertThat(deserialised.title).isEqualTo("Junior Web Developer - Shoreditch, London")

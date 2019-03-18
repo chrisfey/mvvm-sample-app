@@ -56,8 +56,8 @@ class JobSearchViewModel : ViewModel(), Rx {
 }
 
 sealed class Source(val icon: Int) {
-    class Github() : Source(R.drawable.ic_github)
-    class StackOverflow() : Source(R.drawable.ic_stack_overflow)
+    class Github : Source(R.drawable.ic_github)
+    class StackOverflow : Source(R.drawable.ic_stack_overflow)
 }
 
 data class JobViewState(
