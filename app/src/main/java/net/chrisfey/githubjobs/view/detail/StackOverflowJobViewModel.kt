@@ -1,13 +1,13 @@
-package net.chrisfey.githubjobs.view.search.job
+package net.chrisfey.githubjobs.view.detail
 
 import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import net.chrisfey.githubjobs.repository.networking.ScrapedStackOverflowJobResponse
+import net.chrisfey.githubjobs.repository.networking.StackOverflowScrapedJobResponse
 import net.chrisfey.githubjobs.utils.Rx
-import net.chrisfey.stackOverflowjobs.repository.StackOverflowJobRepository
+import net.chrisfey.stackOverflowjobs.repository.IStackOverflowJobRepository
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -15,7 +15,7 @@ class StackOverflowJobViewModel : ViewModel(), Rx {
     override val disposables = mutableListOf<Disposable>()
 
     @Inject
-    lateinit var stackoverflowRepository: StackOverflowJobRepository
+    lateinit var stackoverflowRepository: IStackOverflowJobRepository
 
     val state = BehaviorSubject.createDefault(StackOverflowJobViewState())
 
@@ -27,7 +27,7 @@ class StackOverflowJobViewModel : ViewModel(), Rx {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { state.onNext(StackOverflowJobViewState(it)) },
-                { Timber.e(it, "Fucked up the scrapping")}
+                { Timber.e(it, "Error while scrapping")}
             )
             .addToTrash()
 
@@ -44,5 +44,5 @@ class StackOverflowJobViewModel : ViewModel(), Rx {
 
 
 data class StackOverflowJobViewState(
-     val job: ScrapedStackOverflowJobResponse? = null
+     val job: StackOverflowScrapedJobResponse? = null
 )

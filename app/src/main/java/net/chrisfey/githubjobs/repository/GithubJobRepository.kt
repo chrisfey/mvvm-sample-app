@@ -3,10 +3,12 @@ package net.chrisfey.githubjobs.repository
 import io.reactivex.Observable
 import net.chrisfey.githubjobs.repository.networking.GithubJobHttpClient
 import net.chrisfey.githubjobs.repository.networking.GithubJobResponse
+interface IGithubJobRepository {
+    fun searchJobs(description: String, location: String): Observable<List<GithubJob>>
+}
+class GithubJobRepository(val githubJobClient: GithubJobHttpClient) : IGithubJobRepository{
 
-class GithubJobRepository(val githubJobClient: GithubJobHttpClient) {
-
-    fun searchJobs(description: String, location: String): Observable<List<GithubJob>> {
+    override fun searchJobs(description: String, location: String): Observable<List<GithubJob>> {
         return githubJobClient.searchJobs(description, location)
             .map { it.toGitHubJobs() }
     }
@@ -26,11 +28,11 @@ data class GithubJob(
 )
 
 
-private fun  List<GithubJobResponse>.toGitHubJobs() = map {
+fun  List<GithubJobResponse>.toGitHubJobs() = map {
     it.toGitHubJob()
 }
 
-private fun  GithubJobResponse.toGitHubJob() =
+fun  GithubJobResponse.toGitHubJob() =
     GithubJob(
         id = id,
         title = title,

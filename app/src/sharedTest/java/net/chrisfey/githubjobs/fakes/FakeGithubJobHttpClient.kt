@@ -1,4 +1,4 @@
-package net.chrisfey.githubjobs
+package net.chrisfey.githubjobs.fakes
 
 import io.reactivex.Observable
 import net.chrisfey.githubjobs.repository.networking.GithubJobHttpClient

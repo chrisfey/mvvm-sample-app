@@ -1,20 +1,5 @@
-package net.chrisfey.githubjobs.repository.models
+package net.chrisfey.githubjobs.data
 
-import net.chrisfey.githubjobs.repository.networking.GithubJobResponse
-import net.chrisfey.githubjobs.utils.Jackson
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
-
-class GithubJobTest {
-    @Test
-    fun deserialiseTest() {
-        val deserialised = Jackson.mapper.readValue(GITHUBJOB1, GithubJobResponse::class.java)
-
-        assertThat(deserialised.company).isEqualTo("Angel")
-        assertThat(deserialised.title).isEqualTo("Junior Web Developer - Shoreditch, London")
-        assertThat(deserialised.company_logo).isEqualTo("https://jobs.github.com/rails/active_storage/blobs/angel-circle-01.png")
-    }
-}
 
 
 val GITHUBJOB1 = """

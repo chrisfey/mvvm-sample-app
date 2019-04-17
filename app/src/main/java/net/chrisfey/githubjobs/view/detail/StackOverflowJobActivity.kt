@@ -1,4 +1,4 @@
-package net.chrisfey.githubjobs.view.search.job
+package net.chrisfey.githubjobs.view.detail
 
 import android.content.Context
 import android.content.Intent
@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_stack_over_flow_job.*
-import net.chrisfey.githubjobs.GithubJobsApplication
 import net.chrisfey.githubjobs.R
 import net.chrisfey.githubjobs.utils.Rx
 
@@ -28,7 +27,7 @@ class StackOverflowJobActivity:AppCompatActivity(), Rx {
         setContentView(R.layout.activity_stack_over_flow_job)
 
         viewModel = ViewModelProviders.of(this).get(StackOverflowJobViewModel::class.java)
-        (application as GithubJobsApplication).viewModelInjector.inject(viewModel)
+//TODO switch to android injector and viewModelFactory        (application as JobsApplication).viewModelInjector.inject(viewModel)
 
         viewModel.state.subscribe { renderState(it) }.addToTrash()
         viewModel.getJob(intent.getStringExtra(JOB_URL_STRING_EXTRA))

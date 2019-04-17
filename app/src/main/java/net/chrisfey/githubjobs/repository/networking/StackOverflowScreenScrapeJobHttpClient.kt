@@ -8,11 +8,11 @@ import retrofit2.http.Url
 interface StackOverflowScreenScrapeJobHttpClient {
 
     @GET
-    fun viewJob(@Url url: String): Observable<ScrapedStackOverflowJobResponse>
+    fun viewJob(@Url url: String): Observable<StackOverflowScrapedJobResponse>
 
 }
 
 
-data class ScrapedStackOverflowJobResponse(
+data class StackOverflowScrapedJobResponse(
     @Selector(value = "div.s-avatar img", attr = "src") val companyImage: String? = null
 )

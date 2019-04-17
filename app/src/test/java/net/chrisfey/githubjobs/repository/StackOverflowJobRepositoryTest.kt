@@ -4,7 +4,10 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.Observable.just
-import net.chrisfey.githubjobs.repository.networking.*
+import net.chrisfey.githubjobs.data.STACK_OVERFLOW_RSS_FEED_RESPONSE_1
+import net.chrisfey.githubjobs.repository.networking.StackOverflowRssFeedJobHttpClient
+import net.chrisfey.githubjobs.repository.networking.StackOverflowScrapedJobResponse
+import net.chrisfey.githubjobs.repository.networking.StackOverflowScreenScrapeJobHttpClient
 import net.chrisfey.stackOverflowjobs.repository.StackOverflowJob
 import net.chrisfey.stackOverflowjobs.repository.StackOverflowJobRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -17,23 +20,11 @@ class StackOverflowJobRepositoryTest {
         val rssClient = mockk<StackOverflowRssFeedJobHttpClient>()
         val scraperClient = mockk<StackOverflowScreenScrapeJobHttpClient>()
 
-        every { rssClient.searchJobs("java", "london") } returns just(
-            StackOverflowRssFeedResponse(
-                channel = Channel(
-                    item = listOf(
-                        RssJob(
-                            title = "title",
-                            description = "description",
-                            author = Author(name = "company"),
-                            link = "https://something.com"
-                        )
-                    )
-                )
-            )
-        )
+
+        every { rssClient.searchJobs("java", "london") } returns just(STACK_OVERFLOW_RSS_FEED_RESPONSE_1)
 
         every { scraperClient.viewJob("https://something.com") } returns just(
-            ScrapedStackOverflowJobResponse(companyImage = "image")
+            StackOverflowScrapedJobResponse(companyImage = "image")
         )
 
         val repo = StackOverflowJobRepository(rssClient, scraperClient)

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_job_item.view.*
 import net.chrisfey.githubjobs.R
-import net.chrisfey.githubjobs.view.search.job.StackOverflowJobActivity
+import net.chrisfey.githubjobs.view.detail.StackOverflowJobActivity
 
 
 class JobListAdapter internal constructor(context: Context) : RecyclerView.Adapter<JobListAdapter.JobViewHolder>() {

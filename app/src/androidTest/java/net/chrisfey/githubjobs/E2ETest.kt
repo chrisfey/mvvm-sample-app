@@ -1,9 +1,9 @@
 package net.chrisfey.githubjobs
 
 
-import android.app.Activity
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -12,49 +12,56 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
-import net.chrisfey.githubjobs.di.DaggerViewModelInjector
-import net.chrisfey.githubjobs.di.ViewModelInjector
+import dagger.Provides
+import net.chrisfey.githubjobs.data.JOB1
+import net.chrisfey.githubjobs.data.JOB2
+import net.chrisfey.githubjobs.fakes.FakeGithubJobRepository
+import net.chrisfey.githubjobs.fakes.FakeStackOverflowRepository
+import net.chrisfey.githubjobs.repository.IGithubJobRepository
+import net.chrisfey.githubjobs.repository.toGitHubJobs
 import net.chrisfey.githubjobs.view.search.JobListAdapter
 import net.chrisfey.githubjobs.view.search.JobSearchActivity
+import net.chrisfey.githubjobs.view.search.JobSearchViewModelFactory
+import net.chrisfey.stackOverflowjobs.repository.IStackOverflowJobRepository
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import org.junit.Rule
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 
-class InjectionActivityTestRule<T : Activity>(val viewModelInjector: ViewModelInjector, activityClass: Class<T>) :
-    ActivityTestRule<T>(activityClass) {
-
-    override fun beforeActivityLaunched() {
-        super.beforeActivityLaunched()
-        // setup test component before activity launches
-        val app = ApplicationProvider.getApplicationContext<GithubJobsApplication>()
-        app.viewModelInjector = viewModelInjector
-    }
-}
-
 @RunWith(AndroidJUnit4::class)
 @LargeTest
-class ChangeTextBehaviorTest {
+class E2ETest {
 
-    var fakeGithubClient = FakeGithubJobHttpClient()
+    val fakeGithubRepository = FakeGithubJobRepository()
+    val fakeStackOverflowRepository = FakeStackOverflowRepository()
 
-    var viewModelInjector = DaggerViewModelInjector.builder()
-        .networkModule(FakeNetworkModule(fakeGithubClient))
-        .build()
+    @Before
+    fun setup() {
+        val fakeViewModelFactory = object : ViewModelFactoryModule() {
+            @Provides
+            override fun jobSearchViewModelFactory(stackOverflowRepository: IStackOverflowJobRepository, githubRepository: IGithubJobRepository) =
+                JobSearchViewModelFactory(fakeStackOverflowRepository, fakeGithubRepository)
+        }
 
-    @get:Rule
-    var activityRule = InjectionActivityTestRule(viewModelInjector, JobSearchActivity::class.java)
+        val testAppComponent = DaggerAppComponent.builder()
+            .viewModelFactoryModule(fakeViewModelFactory)
+            .build()
 
+        val app = ApplicationProvider.getApplicationContext<JobsApplication>()
+
+        testAppComponent.inject(app)
+    }
 
     @Test
     fun showSingleJob() {
+        ActivityScenario.launch(JobSearchActivity::class.java)
+        //TODO maybe need to launch after the app was injected???
         onView(withText("Try Searching")).check(matches(isDisplayed()))
 
-        fakeGithubClient.searchJobs = listOf(JOB1)
+        fakeGithubRepository.searchJobs = listOf(JOB1).toGitHubJobs()
 
         onView(withId(R.id.searchBtn))
             .perform(click())
@@ -65,7 +72,7 @@ class ChangeTextBehaviorTest {
         onView(withText(JOB1.company)).check(matches(isDisplayed()))
 
 
-        fakeGithubClient.searchJobs = listOf(JOB1, JOB2)
+        fakeGithubRepository.searchJobs = listOf(JOB1, JOB2).toGitHubJobs()
 
         onView(withId(R.id.searchBtn))
             .perform(click())

@@ -1,4 +1,4 @@
-package net.chrisfey.githubjobs
+package net.chrisfey.githubjobs.data
 
 import net.chrisfey.githubjobs.repository.networking.GithubJobResponse
 

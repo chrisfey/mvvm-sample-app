@@ -1,4 +1,4 @@
-package net.chrisfey.githubjobs
+package net.chrisfey.githubjobs.fakes
 
 import net.chrisfey.githubjobs.di.NetworkModule
 import net.chrisfey.githubjobs.repository.networking.GithubJobHttpClient

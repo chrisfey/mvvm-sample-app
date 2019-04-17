@@ -2,17 +2,21 @@ package net.chrisfey.stackOverflowjobs.repository
 
 import io.reactivex.Observable
 import net.chrisfey.githubjobs.repository.networking.RssJob
-import net.chrisfey.githubjobs.repository.networking.ScrapedStackOverflowJobResponse
 import net.chrisfey.githubjobs.repository.networking.StackOverflowRssFeedJobHttpClient
+import net.chrisfey.githubjobs.repository.networking.StackOverflowScrapedJobResponse
 import net.chrisfey.githubjobs.repository.networking.StackOverflowScreenScrapeJobHttpClient
 
+interface IStackOverflowJobRepository {
+    fun searchJobs (description: String, location: String) : Observable<List<StackOverflowJob>>
+    fun viewJob(uri: String): Observable<StackOverflowScrapedJobResponse>
+}
 
-class StackOverflowJobRepository(
+class StackOverflowJobRepository  (
     val rssFeed: StackOverflowRssFeedJobHttpClient,
     val scraper: StackOverflowScreenScrapeJobHttpClient
-) {
+): IStackOverflowJobRepository {
 
-    fun searchJobs(description: String, location: String) =
+    override fun searchJobs(description: String, location: String) =
         rssFeed.searchJobs(description, location)
             .map { rss -> rss.channel!!.item!! }
             .map { it.take(10) }
@@ -28,12 +32,12 @@ class StackOverflowJobRepository(
             .map { rssJob.toStackOverflowJob(it) }
 
 
-    fun viewJob(uri: String): Observable<ScrapedStackOverflowJobResponse> {
+    override fun viewJob(uri: String): Observable<StackOverflowScrapedJobResponse> {
         return scraper.viewJob(uri)
     }
 }
 
-private fun RssJob.toStackOverflowJob(scrapedJob: ScrapedStackOverflowJobResponse? = null) =
+private fun RssJob.toStackOverflowJob(scrapedJob: StackOverflowScrapedJobResponse? = null) =
     StackOverflowJob(
         link = link,
         title = title,
