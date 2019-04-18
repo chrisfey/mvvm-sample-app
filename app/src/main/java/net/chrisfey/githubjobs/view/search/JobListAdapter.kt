@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_job_item.view.*
 import net.chrisfey.githubjobs.R
-import net.chrisfey.githubjobs.view.detail.StackOverflowJobActivity
+import net.chrisfey.githubjobs.view.detail.github.GitHubJobActivity
+import net.chrisfey.githubjobs.view.detail.stackoverflow.StackOverflowJobActivity
 
 
 class JobListAdapter internal constructor(context: Context) : RecyclerView.Adapter<JobListAdapter.JobViewHolder>() {
@@ -59,7 +59,7 @@ class JobListAdapter internal constructor(context: Context) : RecyclerView.Adapt
             holder.itemView.setOnClickListener {
                 when (current.source) {
                     is Source.StackOverflow -> context.startActivity(StackOverflowJobActivity.newIntent(context, current.jobId))
-                    else -> Toast.makeText(context,"Not supported yet",Toast.LENGTH_LONG).show()
+                    is Source.Github -> context.startActivity(GitHubJobActivity.newIntent(context, current.jobId))
                 }
 
             }

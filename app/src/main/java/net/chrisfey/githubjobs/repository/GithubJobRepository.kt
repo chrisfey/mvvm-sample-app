@@ -5,6 +5,7 @@ import net.chrisfey.githubjobs.repository.networking.GithubJobHttpClient
 import net.chrisfey.githubjobs.repository.networking.GithubJobResponse
 interface IGithubJobRepository {
     fun searchJobs(description: String, location: String): Observable<List<GithubJob>>
+    fun viewJob(jobId: String): Observable<GithubJob>
 }
 class GithubJobRepository(val githubJobClient: GithubJobHttpClient) : IGithubJobRepository{
 
@@ -13,7 +14,7 @@ class GithubJobRepository(val githubJobClient: GithubJobHttpClient) : IGithubJob
             .map { it.toGitHubJobs() }
     }
 
-    fun viewJob(jobId: String): Observable<GithubJob> {
+    override fun viewJob(jobId: String): Observable<GithubJob> {
         return githubJobClient.viewJob(jobId)
             .map { it.toGitHubJob() }
     }

@@ -20,7 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="net.chrisfey.githubjobs.view.detail.StackOverflowJobActivity" />
+        <activity android:name="net.chrisfey.githubjobs.view.detail.stackoverflow.StackOverflowJobActivity" />
+        <activity android:name=".view.detail.github.GitHubJobActivity" />
     </application>
 
 </manifest>
