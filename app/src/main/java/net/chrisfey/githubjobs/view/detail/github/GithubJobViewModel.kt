@@ -1,5 +1,6 @@
 package net.chrisfey.githubjobs.view.detail.github
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -8,7 +9,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import net.chrisfey.githubjobs.repository.GithubJob
 import net.chrisfey.githubjobs.repository.IGithubJobRepository
-import net.chrisfey.githubjobs.utils.Rx
+import net.chrisfey.githubjobs.rx.RxDisposer
 import timber.log.Timber
 
 class GithubJobViewModelFactory constructor(
@@ -25,12 +26,14 @@ class GithubJobViewModelFactory constructor(
 
 }
 
-class GithubJobViewModel(val githubRepository: IGithubJobRepository) : ViewModel(), Rx {
+class GithubJobViewModel(val githubRepository: IGithubJobRepository) : ViewModel(),
+    RxDisposer {
     override val disposables = mutableListOf<Disposable>()
     val state = BehaviorSubject.createDefault(GithubJobViewState())
 
 
     fun getJob(url: String) {
+        Log.d("TEST", "getJob")
         githubRepository
             .viewJob(url)
             .subscribeOn(Schedulers.io())
@@ -41,14 +44,12 @@ class GithubJobViewModel(val githubRepository: IGithubJobRepository) : ViewModel
             )
             .addToTrash()
 
-
     }
 
     override fun onCleared() {
         super.onCleared()
         takeOutTheTrash()
     }
-
 
 }
 

@@ -1,7 +1,6 @@
 package net.chrisfey.githubjobs.view.search
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,12 +10,14 @@ import com.jakewharton.rxbinding3.view.clicks
 import dagger.android.AndroidInjection
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_search.*
-import net.chrisfey.githubjobs.utils.Rx
+import net.chrisfey.githubjobs.rx.RxDisposer
+import net.chrisfey.githubjobs.utils.gone
 import net.chrisfey.githubjobs.utils.hideKeyboard
+import net.chrisfey.githubjobs.utils.visible
 import javax.inject.Inject
 
 
-class JobSearchActivity : AppCompatActivity(), Rx {
+class JobSearchActivity : AppCompatActivity(), RxDisposer {
     override val disposables = mutableListOf<Disposable>()
 
     private lateinit var adapter: JobListAdapter
@@ -28,7 +29,7 @@ class JobSearchActivity : AppCompatActivity(), Rx {
     private var errorSnackBar: Snackbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this);
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(net.chrisfey.githubjobs.R.layout.activity_search)
 
@@ -36,15 +37,12 @@ class JobSearchActivity : AppCompatActivity(), Rx {
         jobList.adapter = adapter
         jobList.layoutManager = LinearLayoutManager(this)
 
-
         viewModel = ViewModelProviders.of(this, this.viewModeFactory).get(JobSearchViewModel::class.java)
-
         viewModel.state.subscribe { renderState(it) }.addToTrash()
 
         searchBtn.clicks().subscribe { search() }.addToTrash()
         swiperefresh.refreshes().subscribe { search() }.addToTrash()
     }
-
 
     private fun search() {
         hideKeyboard()
@@ -54,40 +52,33 @@ class JobSearchActivity : AppCompatActivity(), Rx {
         )
     }
 
-
-
     private fun renderState(viewState: JobSearchViewState) {
+        swiperefresh.gone()
+        swiperefresh.isRefreshing = false
+        trySearching.gone()
+        noResults.gone()
+        errorSnackBar?.dismiss()
 
         when (viewState) {
             is JobSearchViewState.Initial -> {
-                swiperefresh.visibility = View.VISIBLE
-                swiperefresh.isRefreshing = false
-                trySearching.visibility = View.VISIBLE
-                errorSnackBar?.dismiss()
-
+                swiperefresh.visible()
+                trySearching.visible()
             }
             is JobSearchViewState.Loading -> {
-                swiperefresh.visibility = View.VISIBLE
+                swiperefresh.visible()
                 swiperefresh.isRefreshing = true
-                trySearching.visibility = View.GONE
-                errorSnackBar?.dismiss()
+            }
+            is JobSearchViewState.NoResults -> {
+                noResults.visible()
             }
             is JobSearchViewState.Success -> {
-                swiperefresh.visibility = View.VISIBLE
-                swiperefresh.isRefreshing = false
-                trySearching.visibility = View.GONE
+                swiperefresh.visible()
                 adapter.setJobs(viewState.jobs())
-                errorSnackBar?.dismiss()
             }
             is JobSearchViewState.Error -> {
-                swiperefresh.visibility = View.GONE
-                swiperefresh.isRefreshing = false
-                trySearching.visibility = View.GONE
                 errorSnackBar = Snackbar.make(this.window.decorView, "Error: ${viewState.message}", Snackbar.LENGTH_INDEFINITE)
                     .apply { setAction("DISMISS"){dismiss()} }
                 errorSnackBar?.show()
-
-
             }
         }
     }

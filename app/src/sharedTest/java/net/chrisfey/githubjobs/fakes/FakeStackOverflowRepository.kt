@@ -2,10 +2,10 @@ package net.chrisfey.githubjobs.fakes
 
 import io.reactivex.Observable
 import net.chrisfey.githubjobs.repository.networking.StackOverflowScrapedJobResponse
-import net.chrisfey.stackOverflowjobs.repository.IStackOverflowJobRepository
-import net.chrisfey.stackOverflowjobs.repository.StackOverflowJob
+import net.chrisfey.githubjobs.repository.IStackOverflowJobRepository
+import net.chrisfey.githubjobs.repository.StackOverflowJob
 
-class FakeStackOverflowRepository : IStackOverflowJobRepository{
+class FakeStackOverflowRepository : IStackOverflowJobRepository {
     override fun viewJob(uri: String): Observable<StackOverflowScrapedJobResponse> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

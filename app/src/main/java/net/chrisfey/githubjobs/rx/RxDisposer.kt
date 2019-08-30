@@ -1,9 +1,9 @@
-package net.chrisfey.githubjobs.utils
+package net.chrisfey.githubjobs.rx
 
 import io.reactivex.disposables.Disposable
 
 
-interface Rx {
+interface RxDisposer {
     val disposables: MutableList<Disposable>
 
     fun Disposable.addToTrash(){

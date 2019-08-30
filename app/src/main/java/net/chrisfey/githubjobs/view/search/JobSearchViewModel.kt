@@ -2,73 +2,73 @@ package net.chrisfey.githubjobs.view.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import net.chrisfey.githubjobs.R
 import net.chrisfey.githubjobs.repository.GithubJob
 import net.chrisfey.githubjobs.repository.IGithubJobRepository
-import net.chrisfey.githubjobs.utils.Rx
-import net.chrisfey.stackOverflowjobs.repository.IStackOverflowJobRepository
-import net.chrisfey.stackOverflowjobs.repository.StackOverflowJob
+import net.chrisfey.githubjobs.rx.RxSchedulers
+import net.chrisfey.githubjobs.rx.RxDisposer
+import net.chrisfey.githubjobs.repository.IStackOverflowJobRepository
+import net.chrisfey.githubjobs.repository.StackOverflowJob
 
 
 class JobSearchViewModelFactory constructor(
-    val stackoverflowRepository: IStackOverflowJobRepository,
-    val githubRepository: IGithubJobRepository
+    private val stackoverflowRepository: IStackOverflowJobRepository,
+    private val githubRepository: IGithubJobRepository,
+    private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(JobSearchViewModel::class.java!!)) {
-            JobSearchViewModel(githubRepository, stackoverflowRepository) as T
+        return if (modelClass.isAssignableFrom(JobSearchViewModel::class.java)) {
+            JobSearchViewModel(githubRepository, stackoverflowRepository, schedulers) as T
         } else {
             throw IllegalArgumentException("ViewModel Not Found")
         }
     }
-
 }
 
 
 class JobSearchViewModel(
     private val githubRepository: IGithubJobRepository,
-    private val stackoverflowRepository: IStackOverflowJobRepository
-) : ViewModel(), Rx {
+    private val stackoverflowRepository: IStackOverflowJobRepository,
+    private val schedulers: RxSchedulers
+) : ViewModel(), RxDisposer {
     override val disposables = mutableListOf<Disposable>()
 
     val state = BehaviorSubject.createDefault<JobSearchViewState>(JobSearchViewState.Initial)
-
 
     fun searchJobs(description: String, location: String) {
         state.onNext(JobSearchViewState.Loading)
         githubRepository.searchJobs(description, location)
             .singleElement()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
             .subscribe({
                 val currentState = state.value!!
                 state.onNext(
-                    when (currentState) {
-                        is JobSearchViewState.Success -> currentState.copy(gtihubJobs = it)
+                    when  {
+                        currentState is JobSearchViewState.Success -> currentState.copy(gtihubJobs = it)
+                        it.isEmpty() -> JobSearchViewState.NoResults
                         else -> JobSearchViewState.Success(it, null)
                     }
                 )
             }, {
-
                 state.onNext(JobSearchViewState.Error(it.message))
             })
             .addToTrash()
 
         stackoverflowRepository.searchJobs(description, location)
             .singleElement()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
             .subscribe({
                 val currentState = state.value!!
                 state.onNext(
-                    when (currentState) {
-                        is JobSearchViewState.Success -> currentState.copy(stackOverflowJobs = it)
+                    when  {
+                        currentState is JobSearchViewState.Success -> currentState.copy(stackOverflowJobs = it)
+                        it.isEmpty() -> JobSearchViewState.NoResults
                         else -> JobSearchViewState.Success(null, it)
                     }
                 )
@@ -83,8 +83,6 @@ class JobSearchViewModel(
         super.onCleared()
         takeOutTheTrash()
     }
-
-
 }
 
 sealed class Source(val icon: Int) {
@@ -100,10 +98,10 @@ data class JobViewState(
     val source: Source
 )
 
-
 sealed class JobSearchViewState {
     object Initial : JobSearchViewState()
     object Loading : JobSearchViewState()
+    object NoResults : JobSearchViewState()
     data class Success(
         private val gtihubJobs: List<GithubJob>? = null,
         private val stackOverflowJobs: List<StackOverflowJob>? = null

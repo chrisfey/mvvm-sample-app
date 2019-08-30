@@ -8,8 +8,6 @@ import net.chrisfey.githubjobs.data.STACK_OVERFLOW_RSS_FEED_RESPONSE_1
 import net.chrisfey.githubjobs.repository.networking.StackOverflowRssFeedJobHttpClient
 import net.chrisfey.githubjobs.repository.networking.StackOverflowScrapedJobResponse
 import net.chrisfey.githubjobs.repository.networking.StackOverflowScreenScrapeJobHttpClient
-import net.chrisfey.stackOverflowjobs.repository.StackOverflowJob
-import net.chrisfey.stackOverflowjobs.repository.StackOverflowJobRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 

@@ -10,15 +10,13 @@ import dagger.android.AndroidInjection
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_stack_over_flow_job.*
 import net.chrisfey.githubjobs.R
-import net.chrisfey.githubjobs.utils.Rx
+import net.chrisfey.githubjobs.rx.RxDisposer
 import javax.inject.Inject
 
-
-class StackOverflowJobActivity() :AppCompatActivity(), Rx {
+class StackOverflowJobActivity() :AppCompatActivity(), RxDisposer {
     override val disposables = mutableListOf<Disposable>()
     @Inject
     lateinit var viewModeFactory: StackOverflowJobViewModelFactory
-
 
     companion object {
         private const val JOB_URL_STRING_EXTRA ="JOB_URL_STRING_EXTRA"
@@ -34,12 +32,8 @@ class StackOverflowJobActivity() :AppCompatActivity(), Rx {
 
         viewModel = ViewModelProviders.of(this, this.viewModeFactory).get(StackOverflowJobViewModel::class.java)
 
-
         viewModel.state.subscribe { renderState(it) }.addToTrash()
         viewModel.getJob(intent.getStringExtra(JOB_URL_STRING_EXTRA))
-
-        Toast.makeText(this,"IMA LOADED",Toast.LENGTH_LONG)
-
     }
 
     private fun renderState(it: StackOverflowJobViewState) {

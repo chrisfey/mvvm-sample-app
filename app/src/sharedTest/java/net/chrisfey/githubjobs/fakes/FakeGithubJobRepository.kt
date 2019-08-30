@@ -4,11 +4,12 @@ import io.reactivex.Observable
 import net.chrisfey.githubjobs.repository.GithubJob
 import net.chrisfey.githubjobs.repository.IGithubJobRepository
 
-class FakeGithubJobRepository : IGithubJobRepository{
+class FakeGithubJobRepository : IGithubJobRepository {
+    lateinit var searchJobs: Observable<List<GithubJob>>
+    lateinit var viewJob: Observable<GithubJob>
 
-    var searchJobs = emptyList<GithubJob>()
+    override fun viewJob(jobId: String) = viewJob
 
-    override fun searchJobs(description: String, location: String): Observable<List<GithubJob>> {
-        return Observable.just(searchJobs)
-    }
+    override fun searchJobs(description: String, location: String) = searchJobs
+
 }

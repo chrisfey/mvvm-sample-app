@@ -8,25 +8,27 @@ import net.chrisfey.githubjobs.repository.networking.GithubJobHttpClient
 import net.chrisfey.githubjobs.repository.networking.StackOverflowRssFeedJobHttpClient
 import net.chrisfey.githubjobs.repository.networking.StackOverflowScreenScrapeJobHttpClient
 import net.chrisfey.githubjobs.utils.Jackson
-import net.chrisfey.stackOverflowjobs.repository.IStackOverflowJobRepository
-import net.chrisfey.stackOverflowjobs.repository.StackOverflowJobRepository
+import net.chrisfey.githubjobs.repository.IStackOverflowJobRepository
+import net.chrisfey.githubjobs.repository.StackOverflowJobRepository
+import okhttp3.OkHttpClient
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 
 
-
-
-
 @Module
 open class NetworkModule {
 
 
+    @Provides
+    open fun okhttpClient() = OkHttpClient.Builder()
+        .build()
 
 
     @Provides
-    open fun githubJobHttpClient(): GithubJobHttpClient = Retrofit.Builder()
+    open fun githubJobHttpClient(okhttpClient : OkHttpClient): GithubJobHttpClient = Retrofit.Builder()
+        .client(okhttpClient)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(JacksonConverterFactory.create(Jackson.mapper))
         .baseUrl("https://jobs.github.com/")
@@ -34,7 +36,8 @@ open class NetworkModule {
         .create<GithubJobHttpClient>(GithubJobHttpClient::class.java)
 
     @Provides
-    open fun stackOverflowRssFeedJobHttpClient(): StackOverflowRssFeedJobHttpClient = Retrofit.Builder()
+    open fun stackOverflowRssFeedJobHttpClient(okhttpClient : OkHttpClient): StackOverflowRssFeedJobHttpClient = Retrofit.Builder()
+        .client(okhttpClient)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .baseUrl("https://stackoverflow.com/")
         .addConverterFactory(JacksonConverterFactory.create(Jackson.xmlMapper))
@@ -42,18 +45,19 @@ open class NetworkModule {
         .create<StackOverflowRssFeedJobHttpClient>(StackOverflowRssFeedJobHttpClient::class.java)
 
     @Provides
-    open fun stackOverflowScreenScrapeJobHttpClient(): StackOverflowScreenScrapeJobHttpClient = Retrofit.Builder()
+    open fun stackOverflowScreenScrapeJobHttpClient(okhttpClient : OkHttpClient): StackOverflowScreenScrapeJobHttpClient = Retrofit.Builder()
+        .client(okhttpClient)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .baseUrl("https://stackoverflow.com/")
         .addConverterFactory(JspoonConverterFactory.create()).build()
         .create<StackOverflowScreenScrapeJobHttpClient>(StackOverflowScreenScrapeJobHttpClient::class.java)
 
     @Provides
-    fun githubJobRepository(githubJobClient: GithubJobHttpClient): IGithubJobRepository =
+    open fun githubJobRepository(githubJobClient: GithubJobHttpClient): IGithubJobRepository =
         GithubJobRepository(githubJobClient)
 
     @Provides
-    fun stackOverflowJobRepository(rssClient: StackOverflowRssFeedJobHttpClient, scrapeClient : StackOverflowScreenScrapeJobHttpClient): IStackOverflowJobRepository =
+    open fun stackOverflowJobRepository(rssClient: StackOverflowRssFeedJobHttpClient, scrapeClient : StackOverflowScreenScrapeJobHttpClient): IStackOverflowJobRepository =
         StackOverflowJobRepository(rssClient, scrapeClient)
 
 }

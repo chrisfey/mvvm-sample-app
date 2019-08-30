@@ -92,4 +92,5 @@
     </string>
     <string name="action_settings">Settings</string>
     <string name="try_searching">Try Searching</string>
+    <string name="no_jobs_found_matching_these_criteria">No jobs found matching these criteria</string>
 </resources>

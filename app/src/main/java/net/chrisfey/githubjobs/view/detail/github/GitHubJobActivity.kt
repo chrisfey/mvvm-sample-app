@@ -9,11 +9,11 @@ import dagger.android.AndroidInjection
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_github_job.*
 import net.chrisfey.githubjobs.R
-import net.chrisfey.githubjobs.utils.Rx
+import net.chrisfey.githubjobs.rx.RxDisposer
 import javax.inject.Inject
 
 
-class GitHubJobActivity() :AppCompatActivity(), Rx {
+class GitHubJobActivity() :AppCompatActivity(), RxDisposer {
     override val disposables = mutableListOf<Disposable>()
     @Inject
     lateinit var viewModeFactory: GithubJobViewModelFactory
