@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import dagger.android.AndroidInjection
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_github_job.*
@@ -13,7 +13,7 @@ import net.chrisfey.githubjobs.rx.RxDisposer
 import javax.inject.Inject
 
 
-class GitHubJobActivity() :AppCompatActivity(), RxDisposer {
+class GitHubJobActivity :AppCompatActivity(), RxDisposer {
     override val disposables = mutableListOf<Disposable>()
     @Inject
     lateinit var viewModeFactory: GithubJobViewModelFactory
@@ -27,17 +27,13 @@ class GitHubJobActivity() :AppCompatActivity(), RxDisposer {
     private lateinit var viewModel: GithubJobViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this);
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_github_job)
-
-        viewModel = ViewModelProviders.of(this, this.viewModeFactory).get(GithubJobViewModel::class.java)
-
+        viewModel = ViewModelProvider(this,  this.viewModeFactory).get(GithubJobViewModel::class.java)
 
         viewModel.state.subscribe { renderState(it) }.addToTrash()
-        viewModel.getJob(intent.getStringExtra(JOB_URL_STRING_EXTRA))
-
-
+        viewModel.getJob(intent.getStringExtra(JOB_URL_STRING_EXTRA)!!)
     }
 
     private fun renderState(it: GithubJobViewState) {

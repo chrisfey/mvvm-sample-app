@@ -7,10 +7,10 @@ import io.reactivex.subjects.BehaviorSubject
 import net.chrisfey.githubjobs.R
 import net.chrisfey.githubjobs.repository.GithubJob
 import net.chrisfey.githubjobs.repository.IGithubJobRepository
-import net.chrisfey.githubjobs.rx.RxSchedulers
-import net.chrisfey.githubjobs.rx.RxDisposer
 import net.chrisfey.githubjobs.repository.IStackOverflowJobRepository
 import net.chrisfey.githubjobs.repository.StackOverflowJob
+import net.chrisfey.githubjobs.rx.RxDisposer
+import net.chrisfey.githubjobs.rx.RxSchedulers
 
 
 class JobSearchViewModelFactory constructor(

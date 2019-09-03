@@ -4,12 +4,12 @@ import dagger.Module
 import dagger.Provides
 import net.chrisfey.githubjobs.repository.GithubJobRepository
 import net.chrisfey.githubjobs.repository.IGithubJobRepository
+import net.chrisfey.githubjobs.repository.IStackOverflowJobRepository
+import net.chrisfey.githubjobs.repository.StackOverflowJobRepository
 import net.chrisfey.githubjobs.repository.networking.GithubJobHttpClient
 import net.chrisfey.githubjobs.repository.networking.StackOverflowRssFeedJobHttpClient
 import net.chrisfey.githubjobs.repository.networking.StackOverflowScreenScrapeJobHttpClient
 import net.chrisfey.githubjobs.utils.Jackson
-import net.chrisfey.githubjobs.repository.IStackOverflowJobRepository
-import net.chrisfey.githubjobs.repository.StackOverflowJobRepository
 import okhttp3.OkHttpClient
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit

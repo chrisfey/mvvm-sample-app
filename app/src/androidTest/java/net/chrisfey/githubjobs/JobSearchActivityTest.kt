@@ -21,6 +21,7 @@ import net.chrisfey.githubjobs.di.RxModule
 import net.chrisfey.githubjobs.fakes.FakeGithubJobRepository
 import net.chrisfey.githubjobs.fakes.FakeStackOverflowRepository
 import net.chrisfey.githubjobs.repository.IGithubJobRepository
+import net.chrisfey.githubjobs.repository.IStackOverflowJobRepository
 import net.chrisfey.githubjobs.repository.networking.GithubJobHttpClient
 import net.chrisfey.githubjobs.repository.networking.StackOverflowRssFeedJobHttpClient
 import net.chrisfey.githubjobs.repository.networking.StackOverflowScreenScrapeJobHttpClient
@@ -28,7 +29,6 @@ import net.chrisfey.githubjobs.repository.toGitHubJobs
 import net.chrisfey.githubjobs.rx.RxSchedulers
 import net.chrisfey.githubjobs.view.search.JobListAdapter
 import net.chrisfey.githubjobs.view.search.JobSearchActivity
-import net.chrisfey.githubjobs.repository.IStackOverflowJobRepository
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

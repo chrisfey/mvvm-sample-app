@@ -1,7 +1,10 @@
 package net.chrisfey.githubjobs.repository
 
 import io.reactivex.Observable
-import net.chrisfey.githubjobs.repository.networking.*
+import net.chrisfey.githubjobs.repository.networking.RssJob
+import net.chrisfey.githubjobs.repository.networking.StackOverflowRssFeedJobHttpClient
+import net.chrisfey.githubjobs.repository.networking.StackOverflowScrapedJobResponse
+import net.chrisfey.githubjobs.repository.networking.StackOverflowScreenScrapeJobHttpClient
 
 interface IStackOverflowJobRepository {
     fun searchJobs (description: String, location: String) : Observable<List<StackOverflowJob>>

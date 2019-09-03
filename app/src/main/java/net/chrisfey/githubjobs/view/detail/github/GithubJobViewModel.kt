@@ -17,7 +17,7 @@ class GithubJobViewModelFactory constructor(
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(GithubJobViewModel::class.java!!)) {
+        return if (modelClass.isAssignableFrom(GithubJobViewModel::class.java)) {
             GithubJobViewModel(githubRepository) as T
         } else {
             throw IllegalArgumentException("ViewModel Not Found")
@@ -33,7 +33,6 @@ class GithubJobViewModel(val githubRepository: IGithubJobRepository) : ViewModel
 
 
     fun getJob(url: String) {
-        Log.d("TEST", "getJob")
         githubRepository
             .viewJob(url)
             .subscribeOn(Schedulers.io())

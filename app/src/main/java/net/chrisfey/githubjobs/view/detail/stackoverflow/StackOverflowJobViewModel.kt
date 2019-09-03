@@ -6,9 +6,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import net.chrisfey.githubjobs.repository.IStackOverflowJobRepository
 import net.chrisfey.githubjobs.repository.networking.StackOverflowScrapedJobResponse
 import net.chrisfey.githubjobs.rx.RxDisposer
-import net.chrisfey.githubjobs.repository.IStackOverflowJobRepository
 import timber.log.Timber
 
 class StackOverflowJobViewModelFactory constructor(

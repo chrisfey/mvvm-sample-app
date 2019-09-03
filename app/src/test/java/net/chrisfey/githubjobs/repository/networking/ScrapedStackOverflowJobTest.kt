@@ -13,7 +13,7 @@ class ScrapedStackOverflowJobTest{
 
 
         val jspoon = Jspoon.create()
-        val htmlAdapter = jspoon.adapter<StackOverflowScrapedJobResponse>(StackOverflowScrapedJobResponse::class.java!!)
+        val htmlAdapter = jspoon.adapter(StackOverflowScrapedJobResponse::class.java)
 
         val deserialised = htmlAdapter.fromHtml(SO_HTML_JOB_PAGE)
 
