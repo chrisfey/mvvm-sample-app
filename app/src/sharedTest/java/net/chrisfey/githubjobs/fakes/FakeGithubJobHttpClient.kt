@@ -5,8 +5,8 @@ import net.chrisfey.githubjobs.repository.networking.GithubJobHttpClient
 import net.chrisfey.githubjobs.repository.networking.GithubJobResponse
 
 class FakeGithubJobHttpClient : GithubJobHttpClient {
-    lateinit var searchJobs: List<GithubJobResponse>
-    lateinit var viewJob: GithubJobResponse
+    private lateinit var searchJobs: List<GithubJobResponse>
+    private lateinit var viewJob: GithubJobResponse
 
     override fun searchJobs(description: String, location: String): Observable<List<GithubJobResponse>> {
         return Observable.just(searchJobs)

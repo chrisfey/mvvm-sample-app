@@ -1,6 +1,5 @@
 package net.chrisfey.githubjobs.view.detail.github
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -13,7 +12,7 @@ import net.chrisfey.githubjobs.rx.RxDisposer
 import timber.log.Timber
 
 class GithubJobViewModelFactory constructor(
-    val githubRepository: IGithubJobRepository
+    private val githubRepository: IGithubJobRepository
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -26,7 +25,7 @@ class GithubJobViewModelFactory constructor(
 
 }
 
-class GithubJobViewModel(val githubRepository: IGithubJobRepository) : ViewModel(),
+class GithubJobViewModel(private val githubRepository: IGithubJobRepository) : ViewModel(),
     RxDisposer {
     override val disposables = mutableListOf<Disposable>()
     val state = BehaviorSubject.createDefault(GithubJobViewState())

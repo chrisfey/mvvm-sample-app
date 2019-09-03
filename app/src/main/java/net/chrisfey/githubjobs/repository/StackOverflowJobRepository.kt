@@ -12,11 +12,11 @@ interface IStackOverflowJobRepository {
 }
 
 class StackOverflowJobRepository  (
-    val rssFeed: StackOverflowRssFeedJobHttpClient,
-    val scraper: StackOverflowScreenScrapeJobHttpClient
+    private val rssFeed: StackOverflowRssFeedJobHttpClient,
+    private val scraper: StackOverflowScreenScrapeJobHttpClient
 ): IStackOverflowJobRepository {
 
-    override fun searchJobs(description: String, location: String) =
+    override fun searchJobs(description: String, location: String): Observable<List<StackOverflowJob>> =
         rssFeed.searchJobs(description, location)
             .map { rss -> rss.channel!!.item!! }
             .map { it.take(10) }

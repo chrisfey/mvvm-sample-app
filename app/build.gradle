@@ -81,7 +81,7 @@ dependencies {
     implementation "com.jakewharton.rxbinding3:rxbinding-viewpager:$rx_bindings_version"
     implementation "com.jakewharton.rxbinding3:rxbinding-material:$rx_bindings_version"
 
-    //Jspoon
+    //J spoon
     compile 'pl.droidsonroids:jspoon:1.0.0'
     compile 'pl.droidsonroids.retrofit2:converter-jspoon:1.0.0'
 

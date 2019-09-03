@@ -7,7 +7,7 @@ interface IGithubJobRepository {
     fun searchJobs(description: String, location: String): Observable<List<GithubJob>>
     fun viewJob(jobId: String): Observable<GithubJob>
 }
-class GithubJobRepository(val githubJobClient: GithubJobHttpClient) : IGithubJobRepository{
+class GithubJobRepository(private val githubJobClient: GithubJobHttpClient) : IGithubJobRepository{
 
     override fun searchJobs(description: String, location: String): Observable<List<GithubJob>> {
         return githubJobClient.searchJobs(description, location)

@@ -12,11 +12,11 @@ import net.chrisfey.githubjobs.rx.RxDisposer
 import timber.log.Timber
 
 class StackOverflowJobViewModelFactory constructor(
-    val stackoverflowRepository: IStackOverflowJobRepository
+    private val stackoverflowRepository: IStackOverflowJobRepository
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(StackOverflowJobViewModel::class.java!!)) {
+        return if (modelClass.isAssignableFrom(StackOverflowJobViewModel::class.java)) {
             StackOverflowJobViewModel(stackoverflowRepository) as T
         } else {
             throw IllegalArgumentException("ViewModel Not Found")
@@ -24,7 +24,7 @@ class StackOverflowJobViewModelFactory constructor(
     }
 }
 
-class StackOverflowJobViewModel(val stackoverflowRepository: IStackOverflowJobRepository) : ViewModel(),
+class StackOverflowJobViewModel(private val stackoverflowRepository: IStackOverflowJobRepository) : ViewModel(),
     RxDisposer {
     override val disposables = mutableListOf<Disposable>()
     val state = BehaviorSubject.createDefault(StackOverflowJobViewState())

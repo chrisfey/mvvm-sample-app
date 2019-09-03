@@ -12,7 +12,7 @@ import net.chrisfey.githubjobs.R
 import net.chrisfey.githubjobs.rx.RxDisposer
 import javax.inject.Inject
 
-class StackOverflowJobActivity() :AppCompatActivity(), RxDisposer {
+class StackOverflowJobActivity :AppCompatActivity(), RxDisposer {
     override val disposables = mutableListOf<Disposable>()
     @Inject
     lateinit var viewModeFactory: StackOverflowJobViewModelFactory
@@ -25,7 +25,7 @@ class StackOverflowJobActivity() :AppCompatActivity(), RxDisposer {
     private lateinit var viewModel: StackOverflowJobViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this);
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stack_over_flow_job)
 

@@ -10,7 +10,7 @@ class ReleaseTree : @NotNull Timber.Tree() {
             return
         }
 
-        //Dont log anything! but you could send this to EUM system like appD
+        //Don't log anything! but you could send this to EUM system like appD
 
     }
 

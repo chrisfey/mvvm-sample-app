@@ -2,7 +2,7 @@ package net.chrisfey.githubjobs.data
 
 
 
-val SO_HTML_JOB_PAGE = """
+const val SO_HTML_JOB_PAGE = """
 <!DOCTYPE html>
 <div class="job-details--header">
     <div class="s-avatar">

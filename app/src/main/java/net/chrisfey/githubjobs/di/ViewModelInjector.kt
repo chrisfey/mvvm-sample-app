@@ -5,7 +5,7 @@ import net.chrisfey.githubjobs.view.detail.stackoverflow.StackOverflowJobViewMod
 import net.chrisfey.githubjobs.view.search.JobSearchViewModel
 
 
-@Component(modules = arrayOf(NetworkModule::class))
+@Component(modules = [NetworkModule::class])
 interface ViewModelInjector {
     fun inject(app: JobSearchViewModel)
     fun inject(app: StackOverflowJobViewModel)

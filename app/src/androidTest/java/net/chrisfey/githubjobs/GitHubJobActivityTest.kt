@@ -27,7 +27,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class GitHubJobActivityTest {
 
-    lateinit var app : JobsApplication
+    private lateinit var app : JobsApplication
     val fakeGithubRepository = FakeGithubJobRepository()
 
     @Before
