@@ -49,19 +49,19 @@ val networkModuleKoin = module {
             .addConverterFactory(JspoonConverterFactory.create()).build()
             .create(StackOverflowScreenScrapeJobHttpClient::class.java)
     }
+
+    single<IStackOverflowJobRepository> {
+        StackOverflowJobRepository(get(), get())
+    }
 }
 
 @Module
 open class NetworkModule : KoinComponent {
 
-    private val stackOverflowRssFeedJobHttpClient: StackOverflowRssFeedJobHttpClient by inject()
-    private val stackOverflowScreenScrapeJobHttpClient: StackOverflowScreenScrapeJobHttpClient by inject()
+    private val stackOverflowJobRepository: IStackOverflowJobRepository by inject()
 
     @Provides
-    open fun stackOverflowJobRepository(): IStackOverflowJobRepository =
-        StackOverflowJobRepository(
-            stackOverflowRssFeedJobHttpClient,
-            stackOverflowScreenScrapeJobHttpClient
-        )
+    open fun stackOverflowJobRepository(): IStackOverflowJobRepository = stackOverflowJobRepository
+
 
 }
