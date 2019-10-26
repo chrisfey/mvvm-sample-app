@@ -1,10 +1,7 @@
-package net.chrisfey.githubjobs
+package net.chrisfey.githubjobs.di
 
 import dagger.Component
-import net.chrisfey.githubjobs.di.AppModule
-import net.chrisfey.githubjobs.di.NetworkModule
-import net.chrisfey.githubjobs.di.RxModule
-import net.chrisfey.githubjobs.di.ViewModelFactoryModule
+import net.chrisfey.githubjobs.JobsApplication
 import javax.inject.Singleton
 
 
