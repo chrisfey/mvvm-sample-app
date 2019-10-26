@@ -6,7 +6,7 @@ import javax.inject.Singleton
 
 
 @Singleton
-@Component(modules = [AppModule::class, NetworkModule::class, RxModule::class, ViewModelFactoryModule::class])
+@Component(modules = [AppModule::class, RxModule::class, ViewModelFactoryModule::class])
 internal interface AppComponent {
     fun inject(app: JobsApplication)
 }

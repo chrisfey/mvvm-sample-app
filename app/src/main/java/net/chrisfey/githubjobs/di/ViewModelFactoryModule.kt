@@ -15,14 +15,15 @@ import org.koin.standalone.inject
 @Module
 open class ViewModelFactoryModule : KoinComponent{
     private val githubRepository: IGithubJobRepository by inject()
+    private val stackOverflowRepository: IStackOverflowJobRepository by inject()
 
 
     @Provides
-    open fun jobSearchViewModelFactory(stackOverflowRepository: IStackOverflowJobRepository, schedulers: RxSchedulers) =
+    open fun jobSearchViewModelFactory(schedulers: RxSchedulers) =
         JobSearchViewModelFactory(stackOverflowRepository, githubRepository, schedulers)
 
     @Provides
-    open fun stackOverflowJobViewModelFactory(stackOverflowRepository: IStackOverflowJobRepository) =
+    open fun stackOverflowJobViewModelFactory() =
         StackOverflowJobViewModelFactory(stackOverflowRepository)
 
     @Provides

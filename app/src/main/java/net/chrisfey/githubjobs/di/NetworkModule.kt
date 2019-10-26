@@ -54,14 +54,3 @@ val networkModuleKoin = module {
         StackOverflowJobRepository(get(), get())
     }
 }
-
-@Module
-open class NetworkModule : KoinComponent {
-
-    private val stackOverflowJobRepository: IStackOverflowJobRepository by inject()
-
-    @Provides
-    open fun stackOverflowJobRepository(): IStackOverflowJobRepository = stackOverflowJobRepository
-
-
-}
