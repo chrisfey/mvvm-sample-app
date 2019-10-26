@@ -31,33 +31,37 @@ val networkModuleKoin = module {
             .build()
             .create(GithubJobHttpClient::class.java)
     }
-    single<IGithubJobRepository> { GithubJobRepository(get())}
+    single<IGithubJobRepository> { GithubJobRepository(get()) }
+    single<StackOverflowRssFeedJobHttpClient> {
+        Retrofit.Builder()
+            .client(get())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .baseUrl("https://stackoverflow.com/")
+            .addConverterFactory(JacksonConverterFactory.create(Jackson.xmlMapper))
+            .build()
+            .create(StackOverflowRssFeedJobHttpClient::class.java)
+    }
+    single<StackOverflowScreenScrapeJobHttpClient> {
+        Retrofit.Builder()
+            .client(get())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .baseUrl("https://stackoverflow.com/")
+            .addConverterFactory(JspoonConverterFactory.create()).build()
+            .create(StackOverflowScreenScrapeJobHttpClient::class.java)
+    }
 }
 
 @Module
-open class NetworkModule : KoinComponent{
+open class NetworkModule : KoinComponent {
 
-    private val okHttpClient: OkHttpClient by inject()
-
-    @Provides
-    open fun stackOverflowRssFeedJobHttpClient(): StackOverflowRssFeedJobHttpClient = Retrofit.Builder()
-        .client(okHttpClient)
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .baseUrl("https://stackoverflow.com/")
-        .addConverterFactory(JacksonConverterFactory.create(Jackson.xmlMapper))
-        .build()
-        .create(StackOverflowRssFeedJobHttpClient::class.java)
+    private val stackOverflowRssFeedJobHttpClient: StackOverflowRssFeedJobHttpClient by inject()
+    private val stackOverflowScreenScrapeJobHttpClient: StackOverflowScreenScrapeJobHttpClient by inject()
 
     @Provides
-    open fun stackOverflowScreenScrapeJobHttpClient(): StackOverflowScreenScrapeJobHttpClient = Retrofit.Builder()
-        .client(okHttpClient)
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .baseUrl("https://stackoverflow.com/")
-        .addConverterFactory(JspoonConverterFactory.create()).build()
-        .create(StackOverflowScreenScrapeJobHttpClient::class.java)
-
-    @Provides
-    open fun stackOverflowJobRepository(rssClient: StackOverflowRssFeedJobHttpClient, scrapeClient : StackOverflowScreenScrapeJobHttpClient): IStackOverflowJobRepository =
-        StackOverflowJobRepository(rssClient, scrapeClient)
+    open fun stackOverflowJobRepository(): IStackOverflowJobRepository =
+        StackOverflowJobRepository(
+            stackOverflowRssFeedJobHttpClient,
+            stackOverflowScreenScrapeJobHttpClient
+        )
 
 }
