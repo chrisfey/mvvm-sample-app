@@ -22,21 +22,22 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 
 val networkModuleKoin = module {
     single<OkHttpClient> { OkHttpClient.Builder().build() }
+    single<GithubJobHttpClient> {
+        Retrofit.Builder()
+            .client(get())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(JacksonConverterFactory.create(Jackson.mapper))
+            .baseUrl("https://jobs.github.com/")
+            .build()
+            .create(GithubJobHttpClient::class.java)
+    }
+    single<IGithubJobRepository> { GithubJobRepository(get())}
 }
 
 @Module
 open class NetworkModule : KoinComponent{
 
     private val okHttpClient: OkHttpClient by inject()
-
-    @Provides
-    open fun githubJobHttpClient(): GithubJobHttpClient = Retrofit.Builder()
-        .client(okHttpClient)
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .addConverterFactory(JacksonConverterFactory.create(Jackson.mapper))
-        .baseUrl("https://jobs.github.com/")
-        .build()
-        .create(GithubJobHttpClient::class.java)
 
     @Provides
     open fun stackOverflowRssFeedJobHttpClient(): StackOverflowRssFeedJobHttpClient = Retrofit.Builder()
@@ -54,10 +55,6 @@ open class NetworkModule : KoinComponent{
         .baseUrl("https://stackoverflow.com/")
         .addConverterFactory(JspoonConverterFactory.create()).build()
         .create(StackOverflowScreenScrapeJobHttpClient::class.java)
-
-    @Provides
-    open fun githubJobRepository(githubJobClient: GithubJobHttpClient): IGithubJobRepository =
-        GithubJobRepository(githubJobClient)
 
     @Provides
     open fun stackOverflowJobRepository(rssClient: StackOverflowRssFeedJobHttpClient, scrapeClient : StackOverflowScreenScrapeJobHttpClient): IStackOverflowJobRepository =
