@@ -1,18 +1,17 @@
 package net.chrisfey.githubjobs.view.search
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.jakewharton.rxbinding3.swiperefreshlayout.refreshes
-import com.jakewharton.rxbinding3.view.clicks
 import dagger.android.AndroidInjection
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_search.*
 import net.chrisfey.githubjobs.rx.RxDisposer
 import net.chrisfey.githubjobs.utils.gone
 import net.chrisfey.githubjobs.utils.hideKeyboard
+import net.chrisfey.githubjobs.utils.observe
 import net.chrisfey.githubjobs.utils.visible
 import javax.inject.Inject
 
@@ -24,7 +23,8 @@ class JobSearchActivity : AppCompatActivity(), RxDisposer {
 
     @Inject
     lateinit var viewModeFactory: JobSearchViewModelFactory
-    private lateinit var viewModel: JobSearchViewModel
+
+    private val viewModel: JobSearchViewModel by viewModels { viewModeFactory }
 
     private var errorSnackBar: Snackbar? = null
 
@@ -37,11 +37,12 @@ class JobSearchActivity : AppCompatActivity(), RxDisposer {
         jobList.adapter = adapter
         jobList.layoutManager = LinearLayoutManager(this)
 
-        viewModel = ViewModelProviders.of(this, this.viewModeFactory).get(JobSearchViewModel::class.java)
-        viewModel.state.subscribe { renderState(it) }.addToTrash()
+        with(viewModel) {
+            observe(viewState()) { renderState(it) }
+        }
 
-        searchBtn.clicks().subscribe { search() }.addToTrash()
-        swiperefresh.refreshes().subscribe { search() }.addToTrash()
+        searchBtn.setOnClickListener { search() }
+        swiperefresh.setOnRefreshListener { search() }
     }
 
     private fun search() {

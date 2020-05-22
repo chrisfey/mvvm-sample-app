@@ -1,9 +1,10 @@
 package net.chrisfey.githubjobs.view.search
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import io.reactivex.disposables.Disposable
-import io.reactivex.subjects.BehaviorSubject
 import net.chrisfey.githubjobs.R
 import net.chrisfey.githubjobs.repository.GithubJob
 import net.chrisfey.githubjobs.repository.IGithubJobRepository
@@ -36,18 +37,20 @@ class JobSearchViewModel(
 ) : ViewModel(), RxDisposer {
     override val disposables = mutableListOf<Disposable>()
 
-    val state = BehaviorSubject.createDefault<JobSearchViewState>(JobSearchViewState.Initial)
+    private val _viewState = MutableLiveData<JobSearchViewState>()
+
+    fun viewState(): LiveData<JobSearchViewState> = _viewState
 
     fun searchJobs(description: String, location: String) {
-        state.onNext(JobSearchViewState.Loading)
+        _viewState.postValue(JobSearchViewState.Loading)
         githubRepository.searchJobs(description, location)
             .singleElement()
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
             .subscribe({
-                val currentState = state.value!!
-                state.onNext(
+                val currentState = _viewState.value!!
+                _viewState.postValue(
                     when  {
                         currentState is JobSearchViewState.Success -> currentState.copy(gtihubJobs = it)
                         it.isEmpty() -> JobSearchViewState.NoResults
@@ -55,7 +58,7 @@ class JobSearchViewModel(
                     }
                 )
             }, {
-                state.onNext(JobSearchViewState.Error(it.message))
+                _viewState.postValue(JobSearchViewState.Error(it.message))
             })
             .addToTrash()
 
@@ -64,8 +67,8 @@ class JobSearchViewModel(
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
             .subscribe({
-                val currentState = state.value!!
-                state.onNext(
+                val currentState = _viewState.value!!
+                _viewState.postValue(
                     when  {
                         currentState is JobSearchViewState.Success -> currentState.copy(stackOverflowJobs = it)
                         it.isEmpty() -> JobSearchViewState.NoResults
@@ -74,7 +77,7 @@ class JobSearchViewModel(
                 )
             }, {
 
-                state.onNext(JobSearchViewState.Error(it.message))
+                _viewState.postValue(JobSearchViewState.Error(it.message))
             })
             .addToTrash()
     }

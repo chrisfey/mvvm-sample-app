@@ -30,6 +30,14 @@ android {
             java.srcDirs += "src/sharedTest/java"
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 dependencies {
@@ -68,7 +76,8 @@ dependencies {
     //Dagger
     implementation "com.google.dagger:dagger:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"
-    implementation "com.google.dagger:dagger-android-support:$dagger_version" // if you use the support libraries
+    implementation "com.google.dagger:dagger-android-support:$dagger_version"
+    // if you use the support libraries
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
@@ -85,23 +94,28 @@ dependencies {
     implementation "com.jakewharton.rxbinding3:rxbinding-material:$rx_bindings_version"
 
     //J spoon
-    compile 'pl.droidsonroids:jspoon:1.0.0'
-    compile 'pl.droidsonroids.retrofit2:converter-jspoon:1.0.0'
+    implementation 'pl.droidsonroids:jspoon:1.0.0'
+    implementation 'pl.droidsonroids.retrofit2:converter-jspoon:1.0.0'
 
     //AndroidX
-    implementation 'androidx.core:core-ktx:1.2.0-alpha03'
-    implementation "androidx.appcompat:appcompat:1.1.0-rc01"
+    implementation "androidx.appcompat:appcompat:1.3.0-alpha01"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation "androidx.constraintlayout:constraintlayout:1.1.3"
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
-    implementation 'com.google.android.material:material:1.0.0'
+    //AndroidX Ktx
+    implementation 'androidx.core:core-ktx:1.4.0-alpha01'
+    implementation "androidx.activity:activity-ktx:1.1.0"
 
+    //Material
+    implementation 'com.google.android.material:material:1.1.0'
+
+    //Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
 
     testImplementation "junit:junit:4.12"
-    testImplementation "org.assertj:assertj-core:3.11.1"
+    testImplementation "org.assertj:assertj-core:3.12.2"
     testImplementation "io.mockk:mockk:1.9.1"
 
     androidTestImplementation 'androidx.test:rules:1.1.0'

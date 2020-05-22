@@ -1,11 +1,12 @@
 package net.chrisfey.githubjobs.view.detail.github
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
 import net.chrisfey.githubjobs.repository.GithubJob
 import net.chrisfey.githubjobs.repository.IGithubJobRepository
 import net.chrisfey.githubjobs.rx.RxDisposer
@@ -28,16 +29,17 @@ class GithubJobViewModelFactory constructor(
 class GithubJobViewModel(private val githubRepository: IGithubJobRepository) : ViewModel(),
     RxDisposer {
     override val disposables = mutableListOf<Disposable>()
-    val state = BehaviorSubject.createDefault(GithubJobViewState())
+    private val _viewState = MutableLiveData(GithubJobViewState())
 
+    fun viewState(): LiveData<GithubJobViewState> = _viewState
 
-    fun getJob(url: String) {
+    fun init(url: String) {
         githubRepository
             .viewJob(url)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { state.onNext(GithubJobViewState(it)) },
+                { _viewState.postValue(GithubJobViewState(it)) },
                 { Timber.e(it, "Error while scrapping") }
             )
             .addToTrash()

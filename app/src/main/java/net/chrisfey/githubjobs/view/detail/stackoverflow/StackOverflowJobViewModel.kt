@@ -1,11 +1,12 @@
 package net.chrisfey.githubjobs.view.detail.stackoverflow
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
 import net.chrisfey.githubjobs.repository.IStackOverflowJobRepository
 import net.chrisfey.githubjobs.repository.networking.StackOverflowScrapedJobResponse
 import net.chrisfey.githubjobs.rx.RxDisposer
@@ -24,18 +25,21 @@ class StackOverflowJobViewModelFactory constructor(
     }
 }
 
-class StackOverflowJobViewModel(private val stackoverflowRepository: IStackOverflowJobRepository) : ViewModel(),
+class StackOverflowJobViewModel(private val stackoverflowRepository: IStackOverflowJobRepository) :
+    ViewModel(),
     RxDisposer {
     override val disposables = mutableListOf<Disposable>()
-    val state = BehaviorSubject.createDefault(StackOverflowJobViewState())
+    private val _viewState = MutableLiveData<StackOverflowJobViewState>(StackOverflowJobViewState())
 
-    fun getJob(url: String) {
+    fun viewState(): LiveData<StackOverflowJobViewState> = _viewState
+
+    fun init(url: String) {
         stackoverflowRepository
             .viewJob(url)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { state.onNext(StackOverflowJobViewState(it)) },
+                { _viewState.postValue(StackOverflowJobViewState(it)) },
                 { Timber.e(it, "Error while scrapping") }
             )
             .addToTrash()
