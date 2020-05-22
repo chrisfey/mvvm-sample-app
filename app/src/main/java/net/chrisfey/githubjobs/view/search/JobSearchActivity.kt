@@ -3,7 +3,6 @@ package net.chrisfey.githubjobs.view.search
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.AndroidInjection
@@ -12,7 +11,7 @@ import net.chrisfey.githubjobs.utils.*
 import net.chrisfey.githubjobs.view.detail.github.GitHubJobActivity
 import net.chrisfey.githubjobs.view.detail.stackoverflow.StackOverflowJobActivity
 import net.chrisfey.githubjobs.view.search.JobSearchViewModel.NavigationEvent
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 
 class JobSearchActivity : BaseActivity() {
@@ -23,10 +22,7 @@ class JobSearchActivity : BaseActivity() {
 
     private lateinit var adapter: JobListAdapter
 
-    @Inject
-    lateinit var viewModeFactory: JobSearchViewModelFactory
-
-    private val viewModel: JobSearchViewModel by viewModels { viewModeFactory }
+    private val viewModel: JobSearchViewModel by inject()
 
     private var errorSnackBar: Snackbar? = null
 

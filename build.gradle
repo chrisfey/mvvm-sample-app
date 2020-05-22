@@ -10,6 +10,7 @@ buildscript {
         jackson_version = "2.9.6" //nasty bug in jackson-module-kotlin for versions 2.9.7+ see: https://github.com/FasterXML/jackson-module-kotlin/pull/197
         retrofit_version = "2.5.0"
         lifecycle_version = "2.2.0-alpha03"
+        koin_version = "2.1.5"
 
     }
     repositories {

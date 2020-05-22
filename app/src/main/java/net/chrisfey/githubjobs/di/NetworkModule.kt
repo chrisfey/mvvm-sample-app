@@ -11,13 +11,18 @@ import net.chrisfey.githubjobs.repository.networking.StackOverflowRssFeedJobHttp
 import net.chrisfey.githubjobs.repository.networking.StackOverflowScreenScrapeJobHttpClient
 import net.chrisfey.githubjobs.rx.RxSchedulers
 import net.chrisfey.githubjobs.utils.Jackson
+import net.chrisfey.githubjobs.view.search.JobSearchViewModel
 import okhttp3.OkHttpClient
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 
+val viewModelModule = module {
+    viewModel { JobSearchViewModel(get(), get(), get()) }
+}
 val rxModule = module {
     single<RxSchedulers> {
         object : RxSchedulers {

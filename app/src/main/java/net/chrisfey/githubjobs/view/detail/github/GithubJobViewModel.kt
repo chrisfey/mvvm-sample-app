@@ -4,19 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import io.reactivex.schedulers.Schedulers
 import net.chrisfey.githubjobs.repository.GithubJob
 import net.chrisfey.githubjobs.repository.IGithubJobRepository
+import net.chrisfey.githubjobs.rx.RxSchedulers
 import net.chrisfey.githubjobs.utils.BaseViewModel
 import timber.log.Timber
 
 class GithubJobViewModelFactory constructor(
-    private val githubRepository: IGithubJobRepository
+    private val githubRepository: IGithubJobRepository,
+    private val schedulers: RxSchedulers
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(GithubJobViewModel::class.java)) {
-            GithubJobViewModel(githubRepository) as T
+            GithubJobViewModel(githubRepository, schedulers) as T
         } else {
             throw IllegalArgumentException("ViewModel Not Found")
         }
@@ -24,7 +25,7 @@ class GithubJobViewModelFactory constructor(
 
 }
 
-class GithubJobViewModel(private val githubRepository: IGithubJobRepository) : BaseViewModel() {
+class GithubJobViewModel(private val githubRepository: IGithubJobRepository, private val schedulers: RxSchedulers) : BaseViewModel() {
     private val _viewState = MutableLiveData(GithubJobViewState())
 
     fun viewState(): LiveData<GithubJobViewState> = _viewState
@@ -32,7 +33,6 @@ class GithubJobViewModel(private val githubRepository: IGithubJobRepository) : B
     fun init(url: String) {
         githubRepository
             .viewJob(url)
-            .subscribeOn(Schedulers.io())
             .subscribe(
                 { _viewState.postValue(GithubJobViewState(it)) },
                 { Timber.e(it, "Error while scrapping") }

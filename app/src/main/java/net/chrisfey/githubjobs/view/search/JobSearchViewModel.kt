@@ -2,8 +2,6 @@ package net.chrisfey.githubjobs.view.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import net.chrisfey.githubjobs.R
@@ -15,22 +13,6 @@ import net.chrisfey.githubjobs.rx.RxSchedulers
 import net.chrisfey.githubjobs.utils.BaseViewModel
 import net.chrisfey.githubjobs.utils.Event
 import net.chrisfey.githubjobs.utils.EventMutableLiveData
-
-
-class JobSearchViewModelFactory constructor(
-    private val stackoverflowRepository: IStackOverflowJobRepository,
-    private val githubRepository: IGithubJobRepository,
-    private val schedulers: RxSchedulers
-) : ViewModelProvider.Factory {
-
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(JobSearchViewModel::class.java)) {
-            JobSearchViewModel(githubRepository, stackoverflowRepository, schedulers) as T
-        } else {
-            throw IllegalArgumentException("ViewModel Not Found")
-        }
-    }
-}
 
 class JobSearchViewModel(
     private val githubRepository: IGithubJobRepository,
@@ -58,11 +40,10 @@ class JobSearchViewModel(
 
                 }
             )
-            .subscribe({
-                _viewState.postValue(it)
-            }, {
-                _viewState.postValue(JobSearchViewState.Error(it.message))
-            })
+            .subscribe(
+                { _viewState.postValue(it) },
+                { _viewState.postValue(JobSearchViewState.Error(it.message)) }
+            )
             .disposeOnCleared()
 
     }
