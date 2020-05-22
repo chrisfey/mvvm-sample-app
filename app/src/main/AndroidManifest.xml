@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="net.chrisfey.githubjobs"
+    package="net.chrisfey.jobsearch"
     tools:ignore="MissingLeanbackLauncher">
 
     <uses-feature
@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".JobsApplication"
+        android:name="net.chrisfey.jobsearch.JobsApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -23,12 +23,12 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="net.chrisfey.githubjobs.view.search.JobSearchActivity"
+            android:name="net.chrisfey.jobsearch.view.search.JobSearchActivity"
             android:theme="@style/AppTheme.Light" />
-        <activity android:name="net.chrisfey.githubjobs.view.detail.stackoverflow.StackOverflowJobActivity" />
-        <activity android:name=".view.detail.github.GitHubJobActivity" />
+        <activity android:name="net.chrisfey.jobsearch.view.detail.stackoverflow.StackOverflowJobActivity" />
+        <activity android:name="net.chrisfey.jobsearch.view.detail.github.GitHubJobActivity" />
         <activity
-            android:name=".view.login.LoginActivity"
+            android:name="net.chrisfey.jobsearch.view.login.LoginActivity"
             android:theme="@style/AppTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -11,6 +11,7 @@ buildscript {
         retrofit_version = "2.5.0"
         lifecycle_version = "2.2.0-alpha03"
         koin_version = "2.1.5"
+        firebase_version = "19.3.0"
 
     }
     repositories {
