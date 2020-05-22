@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white50"
-    android:backgroundTint="@color/white50"
     tools:context=".view.search.JobSearchActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -89,6 +87,7 @@
             android:layout_marginStart="@dimen/margin8"
             android:layout_marginTop="@dimen/margin8"
             android:layout_marginEnd="@dimen/margin8"
+            android:tint="?attr/colorControlNormal"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_search_black_24dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -130,6 +129,7 @@
             android:layout_marginStart="@dimen/margin8"
             android:layout_marginTop="@dimen/margin8"
             android:layout_marginEnd="@dimen/margin8"
+            android:tint="?attr/colorControlNormal"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_search_black_24dp"
             app:layout_constraintEnd_toEndOf="parent"

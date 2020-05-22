@@ -5,6 +5,7 @@ import dagger.android.AndroidInjectionModule
 import dagger.android.ContributesAndroidInjector
 import net.chrisfey.githubjobs.view.detail.github.GitHubJobActivity
 import net.chrisfey.githubjobs.view.detail.stackoverflow.StackOverflowJobActivity
+import net.chrisfey.githubjobs.view.login.LoginActivity
 import net.chrisfey.githubjobs.view.search.JobSearchActivity
 
 
@@ -20,5 +21,8 @@ internal abstract class AppModule {
 
     @ContributesAndroidInjector
     internal abstract fun githubJobActivity(): GitHubJobActivity
+
+    @ContributesAndroidInjector
+    internal abstract fun loginActivity(): LoginActivity
 
 }
