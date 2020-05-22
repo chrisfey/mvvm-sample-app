@@ -36,6 +36,9 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+    testOptions {
+        animationsDisabled = true
+    }
 }
 
 dependencies {
@@ -69,7 +72,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rx_version"
 
     //Koin
-    implementation "org.koin:koin-android:1.0.2"
+    implementation "org.koin:koin-android:2.1.5"
 
     //Dagger
     implementation "com.google.dagger:dagger:$dagger_version"

@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 import net.chrisfey.githubjobs.R
 import net.chrisfey.githubjobs.repository.GithubJob
 import net.chrisfey.githubjobs.repository.IGithubJobRepository
@@ -36,7 +38,7 @@ class JobSearchViewModel(
     private val schedulers: RxSchedulers
 ) : BaseViewModel() {
 
-    private val _viewState = MutableLiveData<JobSearchViewState>()
+    private val _viewState = MutableLiveData<JobSearchViewState>(JobSearchViewState.Initial)
     private val _navigationEvent = EventMutableLiveData<NavigationEvent>()
 
     fun viewState(): LiveData<JobSearchViewState> = _viewState
@@ -44,43 +46,25 @@ class JobSearchViewModel(
 
     fun searchJobs(description: String, location: String) {
         _viewState.postValue(JobSearchViewState.Loading)
-        githubRepository.searchJobs(description, location)
-            .singleElement()
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
-
-            .subscribe({
-                val currentState = _viewState.value!!
-                _viewState.postValue(
-                    when  {
-                        currentState is JobSearchViewState.Success -> currentState.copy(gtihubJobs = it)
-                        it.isEmpty() -> JobSearchViewState.NoResults
-                        else -> JobSearchViewState.Success(it, null)
+        Observable
+            .combineLatest(
+                githubRepository.searchJobs(description, location).toObservable(),
+                stackoverflowRepository.searchJobs(description, location),
+                BiFunction { githubJobs: List<GithubJob>, stackoverflowJobs: List<StackOverflowJob> ->
+                    when {
+                        githubJobs.isEmpty() && stackoverflowJobs.isEmpty() -> JobSearchViewState.NoResults
+                        else -> JobSearchViewState.Success(githubJobs, stackoverflowJobs)
                     }
-                )
+
+                }
+            )
+            .subscribe({
+                _viewState.postValue(it)
             }, {
                 _viewState.postValue(JobSearchViewState.Error(it.message))
             })
             .disposeOnCleared()
 
-        stackoverflowRepository.searchJobs(description, location)
-            .singleElement()
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
-            .subscribe({
-                val currentState = _viewState.value!!
-                _viewState.postValue(
-                    when  {
-                        currentState is JobSearchViewState.Success -> currentState.copy(stackOverflowJobs = it)
-                        it.isEmpty() -> JobSearchViewState.NoResults
-                        else -> JobSearchViewState.Success(null, it)
-                    }
-                )
-            }, {
-
-                _viewState.postValue(JobSearchViewState.Error(it.message))
-            })
-            .disposeOnCleared()
     }
 
     fun jobTapped(current: JobViewState) {

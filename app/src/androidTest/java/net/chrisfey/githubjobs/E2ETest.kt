@@ -1,7 +1,6 @@
 package net.chrisfey.githubjobs
 
 
-
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
@@ -11,19 +10,14 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.runner.AndroidJUnit4
-import dagger.Provides
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import net.chrisfey.githubjobs.data.JOB1
-import net.chrisfey.githubjobs.di.NetworkModule
-import net.chrisfey.githubjobs.di.RxModule
+import net.chrisfey.githubjobs.di.DaggerAppComponent
 import net.chrisfey.githubjobs.fakes.FakeGithubJobRepository
 import net.chrisfey.githubjobs.fakes.FakeStackOverflowRepository
 import net.chrisfey.githubjobs.repository.IGithubJobRepository
 import net.chrisfey.githubjobs.repository.IStackOverflowJobRepository
-import net.chrisfey.githubjobs.repository.networking.GithubJobHttpClient
-import net.chrisfey.githubjobs.repository.networking.StackOverflowRssFeedJobHttpClient
-import net.chrisfey.githubjobs.repository.networking.StackOverflowScreenScrapeJobHttpClient
 import net.chrisfey.githubjobs.repository.toGitHubJob
 import net.chrisfey.githubjobs.repository.toGitHubJobs
 import net.chrisfey.githubjobs.rx.RxSchedulers
@@ -32,6 +26,8 @@ import net.chrisfey.githubjobs.view.search.JobSearchActivity
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.context.loadKoinModules
+import org.koin.dsl.module
 
 
 @RunWith(AndroidJUnit4::class)
@@ -40,29 +36,24 @@ class E2ETest {
 
     val fakeGithubRepository = FakeGithubJobRepository()
     val fakeStackOverflowRepository = FakeStackOverflowRepository()
+    val fakeRxSchedulers = object : RxSchedulers {
+        override fun computation() = Schedulers.trampoline()
+        override fun io() = Schedulers.trampoline()
+        override fun ui() = Schedulers.trampoline()
+    }
 
     @Before
     fun setup() {
 
-        val fakeRxModule = object : RxModule() {
-            @Provides
-            override fun schedulers() = object : RxSchedulers {
-                override fun computation() = Schedulers.trampoline()
-                override fun io() = Schedulers.trampoline()
-                override fun ui() = Schedulers.trampoline()
-            }
-        }
-        val fakeNetworkModule = object : NetworkModule() {
-            @Provides
-            override fun githubJobRepository(githubJobClient: GithubJobHttpClient): IGithubJobRepository = fakeGithubRepository
-            @Provides
-            override fun stackOverflowJobRepository(rssClient: StackOverflowRssFeedJobHttpClient, scrapeClient : StackOverflowScreenScrapeJobHttpClient): IStackOverflowJobRepository = fakeStackOverflowRepository
-        }
 
-        val testAppComponent = DaggerAppComponent.builder()
-            .networkModule(fakeNetworkModule)
-            .rxModule(fakeRxModule)
-            .build()
+        loadKoinModules(module {
+            single<RxSchedulers>(override = true) { fakeRxSchedulers }
+            single<IGithubJobRepository>(override = true) { fakeGithubRepository }
+            single<IStackOverflowJobRepository>(override = true) { fakeStackOverflowRepository }
+        })
+
+
+        val testAppComponent = DaggerAppComponent.builder().build()
 
         val app = ApplicationProvider.getApplicationContext<JobsApplication>()
 
@@ -71,8 +62,8 @@ class E2ETest {
 
     @Test
     fun happyPathGithub() {
-        fakeGithubRepository.searchJobs = Observable.just(listOf(JOB1).toGitHubJobs())
-        fakeGithubRepository.viewJob = Observable.just(JOB1.toGitHubJob())
+        fakeGithubRepository.searchJobs = Single.just(listOf(JOB1).toGitHubJobs())
+        fakeGithubRepository.viewJob = Single.just(JOB1.toGitHubJob())
 
         ActivityScenario.launch(JobSearchActivity::class.java)
         onView(withText("Try Searching")).check(matches(isDisplayed()))

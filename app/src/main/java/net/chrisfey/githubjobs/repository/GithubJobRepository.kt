@@ -1,20 +1,20 @@
 package net.chrisfey.githubjobs.repository
 
-import io.reactivex.Observable
+import io.reactivex.Single
 import net.chrisfey.githubjobs.repository.networking.GithubJobHttpClient
 import net.chrisfey.githubjobs.repository.networking.GithubJobResponse
 interface IGithubJobRepository {
-    fun searchJobs(description: String, location: String): Observable<List<GithubJob>>
-    fun viewJob(jobId: String): Observable<GithubJob>
+    fun searchJobs(description: String, location: String): Single<List<GithubJob>>
+    fun viewJob(jobId: String): Single<GithubJob>
 }
 class GithubJobRepository(private val githubJobClient: GithubJobHttpClient) : IGithubJobRepository{
 
-    override fun searchJobs(description: String, location: String): Observable<List<GithubJob>> {
+    override fun searchJobs(description: String, location: String): Single<List<GithubJob>> {
         return githubJobClient.searchJobs(description, location)
             .map { it.toGitHubJobs() }
     }
 
-    override fun viewJob(jobId: String): Observable<GithubJob> {
+    override fun viewJob(jobId: String): Single<GithubJob> {
         return githubJobClient.viewJob(jobId)
             .map { it.toGitHubJob() }
     }

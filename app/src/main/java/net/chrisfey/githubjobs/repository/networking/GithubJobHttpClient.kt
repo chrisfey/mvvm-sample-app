@@ -1,6 +1,6 @@
 package net.chrisfey.githubjobs.repository.networking
 
-import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -10,11 +10,11 @@ interface GithubJobHttpClient{
 
     //https://jobs.github.com/positions.json?description=python&location=new+york
     @GET("positions.json")
-    fun searchJobs(@Query("description") description:  String, @Query("location") location: String): Observable<List<GithubJobResponse>>
+    fun searchJobs(@Query("description") description: String, @Query("location") location: String): Single<List<GithubJobResponse>>
 
 
     @GET("positions/{jobId}.json")
-    fun viewJob(@Path("jobId") jobId:  String): Observable<GithubJobResponse>
+    fun viewJob(@Path("jobId") jobId: String): Single<GithubJobResponse>
 
 }
 

@@ -8,18 +8,21 @@ import net.chrisfey.githubjobs.di.DaggerAppComponent
 import net.chrisfey.githubjobs.di.networkModuleKoin
 import net.chrisfey.githubjobs.logging.DebugTree
 import net.chrisfey.githubjobs.logging.ReleaseTree
-import org.koin.standalone.StandAloneContext.startKoin
+import org.koin.core.context.startKoin
 import timber.log.Timber
 import javax.inject.Inject
 
 
 open class JobsApplication : Application(), HasActivityInjector {
-    @Inject lateinit var dispatchingActivityInjector :DispatchingAndroidInjector<Activity>
+    @Inject
+    lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
 
 
     override fun onCreate() {
         super.onCreate()
-        startKoin(listOf(networkModuleKoin))
+        startKoin {
+            modules(networkModuleKoin)
+        }
         DaggerAppComponent.create().inject(this)
 
         if (BuildConfig.DEBUG) {
@@ -29,8 +32,7 @@ open class JobsApplication : Application(), HasActivityInjector {
         }
     }
 
-    override fun activityInjector() =dispatchingActivityInjector
-
+    override fun activityInjector() = dispatchingActivityInjector
 
 
 }

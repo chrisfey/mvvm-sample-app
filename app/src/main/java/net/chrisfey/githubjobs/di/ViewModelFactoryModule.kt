@@ -9,18 +9,19 @@ import net.chrisfey.githubjobs.rx.RxSchedulers
 import net.chrisfey.githubjobs.view.detail.github.GithubJobViewModelFactory
 import net.chrisfey.githubjobs.view.detail.stackoverflow.StackOverflowJobViewModelFactory
 import net.chrisfey.githubjobs.view.search.JobSearchViewModelFactory
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+
 
 @Module
-open class ViewModelFactoryModule : KoinComponent{
+open class ViewModelFactoryModule : KoinComponent {
     private val githubRepository: IGithubJobRepository by inject()
     private val stackOverflowRepository: IStackOverflowJobRepository by inject()
-
+    private val rxSchedulers: RxSchedulers by inject()
 
     @Provides
-    open fun jobSearchViewModelFactory(schedulers: RxSchedulers) =
-        JobSearchViewModelFactory(stackOverflowRepository, githubRepository, schedulers)
+    open fun jobSearchViewModelFactory() =
+        JobSearchViewModelFactory(stackOverflowRepository, githubRepository, rxSchedulers)
 
     @Provides
     open fun stackOverflowJobViewModelFactory() =
