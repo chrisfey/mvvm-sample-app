@@ -1,23 +1,25 @@
 package net.chrisfey.githubjobs.view.search
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.AndroidInjection
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_search.*
-import net.chrisfey.githubjobs.rx.RxDisposer
-import net.chrisfey.githubjobs.utils.gone
-import net.chrisfey.githubjobs.utils.hideKeyboard
-import net.chrisfey.githubjobs.utils.observe
-import net.chrisfey.githubjobs.utils.visible
+import net.chrisfey.githubjobs.utils.*
+import net.chrisfey.githubjobs.view.detail.github.GitHubJobActivity
+import net.chrisfey.githubjobs.view.detail.stackoverflow.StackOverflowJobActivity
+import net.chrisfey.githubjobs.view.search.JobSearchViewModel.NavigationEvent
 import javax.inject.Inject
 
 
-class JobSearchActivity : AppCompatActivity(), RxDisposer {
-    override val disposables = mutableListOf<Disposable>()
+class JobSearchActivity : BaseActivity() {
+
+    companion object {
+        fun getIntent(context: Context) = Intent(context, JobSearchActivity::class.java)
+    }
 
     private lateinit var adapter: JobListAdapter
 
@@ -33,16 +35,22 @@ class JobSearchActivity : AppCompatActivity(), RxDisposer {
         super.onCreate(savedInstanceState)
         setContentView(net.chrisfey.githubjobs.R.layout.activity_search)
 
-        adapter = JobListAdapter(this)
+        adapter = JobListAdapter(this, viewModel::jobTapped)
         jobList.adapter = adapter
         jobList.layoutManager = LinearLayoutManager(this)
 
         with(viewModel) {
             observe(viewState()) { renderState(it) }
+            observe(navigationEvent()) { it.handle { handleNavigationEvent(it) } }
         }
 
         searchBtn.setOnClickListener { search() }
         swiperefresh.setOnRefreshListener { search() }
+    }
+
+    private fun handleNavigationEvent(navigationEvent: NavigationEvent) = when (navigationEvent) {
+        is NavigationEvent.GithubJobDetail -> startActivity(GitHubJobActivity.newIntent(this, navigationEvent.jobId))
+        is NavigationEvent.StackOverflowJobDetail -> startActivity(StackOverflowJobActivity.newIntent(this, navigationEvent.jobId))
     }
 
     private fun search() {
@@ -78,15 +86,10 @@ class JobSearchActivity : AppCompatActivity(), RxDisposer {
             }
             is JobSearchViewState.Error -> {
                 errorSnackBar = Snackbar.make(this.window.decorView, "Error: ${viewState.message}", Snackbar.LENGTH_INDEFINITE)
-                    .apply { setAction("DISMISS"){dismiss()} }
+                    .apply { setAction("DISMISS") { dismiss() } }
                 errorSnackBar?.show()
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        takeOutTheTrash()
     }
 
 }

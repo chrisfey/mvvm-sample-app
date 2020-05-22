@@ -1,10 +1,11 @@
 package net.chrisfey.Logins.view.login
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import io.reactivex.disposables.Disposable
-import io.reactivex.subjects.BehaviorSubject
-import net.chrisfey.githubjobs.rx.RxDisposer
+import net.chrisfey.githubjobs.utils.BaseViewModel
+import net.chrisfey.githubjobs.utils.Event
+import net.chrisfey.githubjobs.utils.EventMutableLiveData
 
 class LoginViewModelFactory : ViewModelProvider.Factory {
 
@@ -18,19 +19,17 @@ class LoginViewModelFactory : ViewModelProvider.Factory {
 
 }
 
-class LoginViewModel : ViewModel(), RxDisposer {
-    override val disposables = mutableListOf<Disposable>()
-    val state = BehaviorSubject.createDefault(LoginViewState.NotLoggedIn)
+class LoginViewModel : BaseViewModel() {
+    val _navigationEvent = EventMutableLiveData<NavigationEvent>()
 
+    fun navigationEvents(): LiveData<Event<NavigationEvent>> = _navigationEvent
 
-    override fun onCleared() {
-        super.onCleared()
-        takeOutTheTrash()
+    fun login(username: String, password: String) {
+        //assume success
+        _navigationEvent.postEvent(NavigationEvent.LoggedIn)
     }
 
-}
-
-
-sealed class LoginViewState {
-    object NotLoggedIn : LoginViewState()
+    sealed class NavigationEvent {
+        object LoggedIn : NavigationEvent()
+    }
 }

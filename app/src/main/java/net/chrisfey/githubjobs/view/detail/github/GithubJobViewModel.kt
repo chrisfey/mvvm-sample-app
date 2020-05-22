@@ -4,12 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import net.chrisfey.githubjobs.repository.GithubJob
 import net.chrisfey.githubjobs.repository.IGithubJobRepository
-import net.chrisfey.githubjobs.rx.RxDisposer
+import net.chrisfey.githubjobs.utils.BaseViewModel
 import timber.log.Timber
 
 class GithubJobViewModelFactory constructor(
@@ -26,9 +24,7 @@ class GithubJobViewModelFactory constructor(
 
 }
 
-class GithubJobViewModel(private val githubRepository: IGithubJobRepository) : ViewModel(),
-    RxDisposer {
-    override val disposables = mutableListOf<Disposable>()
+class GithubJobViewModel(private val githubRepository: IGithubJobRepository) : BaseViewModel() {
     private val _viewState = MutableLiveData(GithubJobViewState())
 
     fun viewState(): LiveData<GithubJobViewState> = _viewState
@@ -37,20 +33,12 @@ class GithubJobViewModel(private val githubRepository: IGithubJobRepository) : V
         githubRepository
             .viewJob(url)
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { _viewState.postValue(GithubJobViewState(it)) },
                 { Timber.e(it, "Error while scrapping") }
             )
-            .addToTrash()
-
+            .disposeOnCleared()
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        takeOutTheTrash()
-    }
-
 }
 
 

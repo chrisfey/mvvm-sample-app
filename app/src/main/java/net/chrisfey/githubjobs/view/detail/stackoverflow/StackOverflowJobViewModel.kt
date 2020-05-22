@@ -5,11 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import net.chrisfey.githubjobs.repository.IStackOverflowJobRepository
 import net.chrisfey.githubjobs.repository.networking.StackOverflowScrapedJobResponse
-import net.chrisfey.githubjobs.rx.RxDisposer
+import net.chrisfey.githubjobs.utils.BaseViewModel
 import timber.log.Timber
 
 class StackOverflowJobViewModelFactory constructor(
@@ -26,9 +25,7 @@ class StackOverflowJobViewModelFactory constructor(
 }
 
 class StackOverflowJobViewModel(private val stackoverflowRepository: IStackOverflowJobRepository) :
-    ViewModel(),
-    RxDisposer {
-    override val disposables = mutableListOf<Disposable>()
+    BaseViewModel() {
     private val _viewState = MutableLiveData<StackOverflowJobViewState>(StackOverflowJobViewState())
 
     fun viewState(): LiveData<StackOverflowJobViewState> = _viewState
@@ -42,12 +39,7 @@ class StackOverflowJobViewModel(private val stackoverflowRepository: IStackOverf
                 { _viewState.postValue(StackOverflowJobViewState(it)) },
                 { Timber.e(it, "Error while scrapping") }
             )
-            .addToTrash()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        takeOutTheTrash()
+            .disposeOnCleared()
     }
 }
 

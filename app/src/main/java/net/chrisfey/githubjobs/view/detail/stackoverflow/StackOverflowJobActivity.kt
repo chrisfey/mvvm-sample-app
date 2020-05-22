@@ -4,17 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import dagger.android.AndroidInjection
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_stack_over_flow_job.*
 import net.chrisfey.githubjobs.R
-import net.chrisfey.githubjobs.rx.RxDisposer
+import net.chrisfey.githubjobs.utils.BaseActivity
 import net.chrisfey.githubjobs.utils.observe
 import javax.inject.Inject
 
-class StackOverflowJobActivity : AppCompatActivity(), RxDisposer {
-    override val disposables = mutableListOf<Disposable>()
+class StackOverflowJobActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModeFactory: StackOverflowJobViewModelFactory

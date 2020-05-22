@@ -4,14 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import io.reactivex.disposables.Disposable
 import net.chrisfey.githubjobs.R
 import net.chrisfey.githubjobs.repository.GithubJob
 import net.chrisfey.githubjobs.repository.IGithubJobRepository
 import net.chrisfey.githubjobs.repository.IStackOverflowJobRepository
 import net.chrisfey.githubjobs.repository.StackOverflowJob
-import net.chrisfey.githubjobs.rx.RxDisposer
 import net.chrisfey.githubjobs.rx.RxSchedulers
+import net.chrisfey.githubjobs.utils.BaseViewModel
+import net.chrisfey.githubjobs.utils.Event
+import net.chrisfey.githubjobs.utils.EventMutableLiveData
 
 
 class JobSearchViewModelFactory constructor(
@@ -29,17 +30,17 @@ class JobSearchViewModelFactory constructor(
     }
 }
 
-
 class JobSearchViewModel(
     private val githubRepository: IGithubJobRepository,
     private val stackoverflowRepository: IStackOverflowJobRepository,
     private val schedulers: RxSchedulers
-) : ViewModel(), RxDisposer {
-    override val disposables = mutableListOf<Disposable>()
+) : BaseViewModel() {
 
     private val _viewState = MutableLiveData<JobSearchViewState>()
+    private val _navigationEvent = EventMutableLiveData<NavigationEvent>()
 
     fun viewState(): LiveData<JobSearchViewState> = _viewState
+    fun navigationEvent(): LiveData<Event<NavigationEvent>> = _navigationEvent
 
     fun searchJobs(description: String, location: String) {
         _viewState.postValue(JobSearchViewState.Loading)
@@ -60,7 +61,7 @@ class JobSearchViewModel(
             }, {
                 _viewState.postValue(JobSearchViewState.Error(it.message))
             })
-            .addToTrash()
+            .disposeOnCleared()
 
         stackoverflowRepository.searchJobs(description, location)
             .singleElement()
@@ -79,12 +80,19 @@ class JobSearchViewModel(
 
                 _viewState.postValue(JobSearchViewState.Error(it.message))
             })
-            .addToTrash()
+            .disposeOnCleared()
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        takeOutTheTrash()
+    fun jobTapped(current: JobViewState) {
+        when (current.source) {
+            is Source.StackOverflow -> _navigationEvent.postEvent(NavigationEvent.StackOverflowJobDetail(current.jobId))
+            is Source.Github -> _navigationEvent.postEvent(NavigationEvent.GithubJobDetail(current.jobId))
+        }
+    }
+
+    sealed class NavigationEvent {
+        class StackOverflowJobDetail(val jobId: String) : NavigationEvent()
+        class GithubJobDetail(val jobId: String) : NavigationEvent()
     }
 }
 

@@ -11,15 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_job_item.view.*
 import net.chrisfey.githubjobs.R
-import net.chrisfey.githubjobs.view.detail.github.GitHubJobActivity
-import net.chrisfey.githubjobs.view.detail.stackoverflow.StackOverflowJobActivity
 
 
-class JobListAdapter internal constructor(context: Context) : RecyclerView.Adapter<JobListAdapter.JobViewHolder>() {
+class JobListAdapter internal constructor(context: Context, private val clickListener: (JobViewState) -> Unit) :
+    RecyclerView.Adapter<JobListAdapter.JobViewHolder>() {
 
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
     private var mJobs: List<JobViewState>? = null // Cached copy of Jobs
-
     // getItemCount() is called many times, and when it is first called,
     // mJobs has not been updated (means initially, it's null, and we can't return null).
     override fun getItemCount(): Int {
@@ -56,13 +54,7 @@ class JobListAdapter internal constructor(context: Context) : RecyclerView.Adapt
                     .placeholder(R.drawable.ic_image_black_24dp)
                     .into(holder.companyLogo)
             }
-            holder.itemView.setOnClickListener {
-                when (current.source) {
-                    is Source.StackOverflow -> context.startActivity(StackOverflowJobActivity.newIntent(context, current.jobId))
-                    is Source.Github -> context.startActivity(GitHubJobActivity.newIntent(context, current.jobId))
-                }
-
-            }
+            holder.itemView.setOnClickListener { clickListener.invoke(current) }
 
         } else {
             // Covers the case of data not being ready yet.
