@@ -14,6 +14,7 @@ import net.chrisfey.jobsearch.rx.RxSchedulers
 import net.chrisfey.jobsearch.utils.Jackson
 import net.chrisfey.jobsearch.view.login.LoginViewModel
 import net.chrisfey.jobsearch.view.search.JobSearchViewModel
+import net.chrisfey.jobsearch.view.startup.StartupViewModel
 import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -26,6 +27,7 @@ val firebaseModule = module {
     single { FirebaseAuth.getInstance() }
 }
 val viewModelModule = module {
+    viewModel { StartupViewModel(get()) }
     viewModel { JobSearchViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get()) }
 }

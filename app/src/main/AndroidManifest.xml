@@ -24,11 +24,15 @@
 
         <activity
             android:name="net.chrisfey.jobsearch.view.search.JobSearchActivity"
-            android:theme="@style/AppTheme.Light" />
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name="net.chrisfey.jobsearch.view.detail.stackoverflow.StackOverflowJobActivity" />
         <activity android:name="net.chrisfey.jobsearch.view.detail.github.GitHubJobActivity" />
         <activity
             android:name="net.chrisfey.jobsearch.view.login.LoginActivity"
+            android:theme="@style/AppTheme.Dark"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".view.startup.StartupActivity"
             android:theme="@style/AppTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

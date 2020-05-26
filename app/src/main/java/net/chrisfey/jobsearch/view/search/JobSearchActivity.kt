@@ -37,7 +37,7 @@ class JobSearchActivity : BaseActivity() {
 
         with(viewModel) {
             observe(viewState()) { renderState(it) }
-            observe(navigationEvent()) { it.handle { handleNavigationEvent(it) } }
+            observe(navigationEvents()) { event -> event.handle { handleNavigationEvent(it) } }
         }
 
         searchBtn.setOnClickListener { search() }

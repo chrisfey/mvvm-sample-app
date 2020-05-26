@@ -24,7 +24,7 @@ class JobSearchViewModel(
     private val _navigationEvent = EventMutableLiveData<NavigationEvent>()
 
     fun viewState(): LiveData<JobSearchViewState> = _viewState
-    fun navigationEvent(): LiveData<Event<NavigationEvent>> = _navigationEvent
+    fun navigationEvents(): LiveData<Event<NavigationEvent>> = _navigationEvent
 
     fun searchJobs(description: String, location: String) {
         _viewState.postValue(JobSearchViewState.Loading)

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "527099043753",
+    "firebase_url": "https://jobsearch-2d333.firebaseio.com",
+    "project_id": "jobsearch-2d333",
+    "storage_bucket": "jobsearch-2d333.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:527099043753:android:63942b55a7daa04368eeb8",
+        "android_client_info": {
+          "package_name": "net.chrisfey.jobsearch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "527099043753-hc094joffdq7aug60iuslmn9lqsg5kog.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0OxGF7L-Ggo8lcttpSPmanvS8YI-bdtA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "527099043753-hc094joffdq7aug60iuslmn9lqsg5kog.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
