@@ -16,13 +16,13 @@ import net.chrisfey.jobsearch.data.JOB1
 import net.chrisfey.jobsearch.di.DaggerAppComponent
 import net.chrisfey.jobsearch.fakes.FakeGithubJobRepository
 import net.chrisfey.jobsearch.fakes.FakeStackOverflowRepository
+import net.chrisfey.jobsearch.jobsearch.search.JobListAdapter
+import net.chrisfey.jobsearch.jobsearch.search.JobSearchActivity
 import net.chrisfey.jobsearch.repository.IGithubJobRepository
 import net.chrisfey.jobsearch.repository.IStackOverflowJobRepository
 import net.chrisfey.jobsearch.repository.toGitHubJob
 import net.chrisfey.jobsearch.repository.toGitHubJobs
 import net.chrisfey.jobsearch.rx.RxSchedulers
-import net.chrisfey.jobsearch.view.search.JobListAdapter
-import net.chrisfey.jobsearch.view.search.JobSearchActivity
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

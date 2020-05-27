@@ -6,7 +6,9 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import net.chrisfey.jobsearch.di.*
 import net.chrisfey.jobsearch.logging.DebugTree
+import net.chrisfey.jobsearch.logging.KoinTimberLogger
 import net.chrisfey.jobsearch.logging.ReleaseTree
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
 import javax.inject.Inject
@@ -20,6 +22,8 @@ open class JobsApplication : Application(), HasActivityInjector {
     override fun onCreate() {
         super.onCreate()
         startKoin {
+            logger(KoinTimberLogger())
+            androidContext(this@JobsApplication)
             modules(rxModule, firebaseModule, networkModuleKoin, viewModelModule)
         }
         DaggerAppComponent.create().inject(this)

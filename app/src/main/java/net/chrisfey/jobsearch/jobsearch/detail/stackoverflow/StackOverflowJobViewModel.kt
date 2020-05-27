@@ -1,4 +1,4 @@
-package net.chrisfey.jobsearch.view.detail.stackoverflow
+package net.chrisfey.jobsearch.jobsearch.detail.stackoverflow
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,7 +26,9 @@ class StackOverflowJobViewModelFactory constructor(
 
 class StackOverflowJobViewModel(private val stackoverflowRepository: IStackOverflowJobRepository, private val schedulers: RxSchedulers) :
     BaseViewModel() {
-    private val _viewState = MutableLiveData<StackOverflowJobViewState>(StackOverflowJobViewState())
+    private val _viewState = MutableLiveData<StackOverflowJobViewState>(
+        StackOverflowJobViewState()
+    )
 
     fun viewState(): LiveData<StackOverflowJobViewState> = _viewState
 

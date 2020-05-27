@@ -1,8 +1,12 @@
 package net.chrisfey.jobsearch.di
 
+import android.app.Activity
 import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import net.chrisfey.jobsearch.coordinator.FeatureNavigator
+import net.chrisfey.jobsearch.jobsearch.search.JobSearchViewModel
+import net.chrisfey.jobsearch.onboarding.login.LoginViewModel
 import net.chrisfey.jobsearch.repository.GithubJobRepository
 import net.chrisfey.jobsearch.repository.IGithubJobRepository
 import net.chrisfey.jobsearch.repository.IStackOverflowJobRepository
@@ -11,10 +15,9 @@ import net.chrisfey.jobsearch.repository.networking.GithubJobHttpClient
 import net.chrisfey.jobsearch.repository.networking.StackOverflowRssFeedJobHttpClient
 import net.chrisfey.jobsearch.repository.networking.StackOverflowScreenScrapeJobHttpClient
 import net.chrisfey.jobsearch.rx.RxSchedulers
+import net.chrisfey.jobsearch.startup.StartupCoordinator
+import net.chrisfey.jobsearch.startup.StartupViewModel
 import net.chrisfey.jobsearch.utils.Jackson
-import net.chrisfey.jobsearch.view.login.LoginViewModel
-import net.chrisfey.jobsearch.view.search.JobSearchViewModel
-import net.chrisfey.jobsearch.view.startup.StartupViewModel
 import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -27,6 +30,7 @@ val firebaseModule = module {
     single { FirebaseAuth.getInstance() }
 }
 val viewModelModule = module {
+    single { (activity: Activity) -> StartupCoordinator(get(), FeatureNavigator(activity)) }
     viewModel { StartupViewModel(get()) }
     viewModel { JobSearchViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get()) }

@@ -1,32 +1,29 @@
-package net.chrisfey.jobsearch.view.login
+package net.chrisfey.jobsearch.onboarding.login
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_login.*
 import net.chrisfey.jobsearch.R
-import net.chrisfey.jobsearch.utils.BaseActivity
+import net.chrisfey.jobsearch.coordinator.hostedViewModel
+import net.chrisfey.jobsearch.jobsearch.search.JobSearchActivity
+import net.chrisfey.jobsearch.onboarding.login.LoginViewModel.NavigationEvent
 import net.chrisfey.jobsearch.utils.observe
-import net.chrisfey.jobsearch.view.login.LoginViewModel.NavigationEvent
-import net.chrisfey.jobsearch.view.search.JobSearchActivity
-import org.koin.android.ext.android.inject
 
 
-class LoginActivity : BaseActivity() {
+class LoginFragment : Fragment() {
 
 
-    companion object {
-        fun getIntent(context: Context) = Intent(context, LoginActivity::class.java)
+    private val viewModel: LoginViewModel by hostedViewModel()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        return inflater.inflate(R.layout.activity_login, container)
     }
-
-    private val viewModel: LoginViewModel by inject()
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
         with(viewModel) {
             observe(navigationEvents()) { event -> event.handle { handleNavigation(it) } }
             observe(errorEvents()) { event -> event.handle { handleError(it) } }
@@ -36,7 +33,7 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun handleNavigation(navigation: NavigationEvent) = when (navigation) {
-        is NavigationEvent.LoggedIn -> startActivity(JobSearchActivity.getIntent(this))
+        is NavigationEvent.LoggedIn -> startActivity(JobSearchActivity.getIntent(requireContext()))
     }
 
     private fun handleError(error: LoginViewModel.ErrorEvent) = when (error) {

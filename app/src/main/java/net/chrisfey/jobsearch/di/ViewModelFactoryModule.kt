@@ -2,11 +2,11 @@ package net.chrisfey.jobsearch.di
 
 import dagger.Module
 import dagger.Provides
+import net.chrisfey.jobsearch.jobsearch.detail.github.GithubJobViewModelFactory
+import net.chrisfey.jobsearch.jobsearch.detail.stackoverflow.StackOverflowJobViewModelFactory
 import net.chrisfey.jobsearch.repository.IGithubJobRepository
 import net.chrisfey.jobsearch.repository.IStackOverflowJobRepository
 import net.chrisfey.jobsearch.rx.RxSchedulers
-import net.chrisfey.jobsearch.view.detail.github.GithubJobViewModelFactory
-import net.chrisfey.jobsearch.view.detail.stackoverflow.StackOverflowJobViewModelFactory
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -19,7 +19,10 @@ open class ViewModelFactoryModule : KoinComponent {
 
     @Provides
     open fun stackOverflowJobViewModelFactory() =
-        StackOverflowJobViewModelFactory(stackOverflowRepository, rxSchedulers)
+        StackOverflowJobViewModelFactory(
+            stackOverflowRepository,
+            rxSchedulers
+        )
 
     @Provides
     open fun githubJobViewModelFactory() =

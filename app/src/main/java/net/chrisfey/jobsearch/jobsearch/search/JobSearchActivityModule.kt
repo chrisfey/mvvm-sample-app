@@ -1,4 +1,4 @@
-package net.chrisfey.jobsearch.view.search
+package net.chrisfey.jobsearch.jobsearch.search
 
 import dagger.Module
 

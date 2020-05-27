@@ -1,4 +1,4 @@
-package net.chrisfey.jobsearch.view.login
+package net.chrisfey.jobsearch.onboarding.login
 
 import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseAuth

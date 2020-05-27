@@ -1,4 +1,4 @@
-package net.chrisfey.jobsearch.view.search
+package net.chrisfey.jobsearch.jobsearch.search
 
 import android.content.Context
 import android.content.Intent
@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_search.*
+import net.chrisfey.jobsearch.jobsearch.detail.github.GitHubJobActivity
+import net.chrisfey.jobsearch.jobsearch.detail.stackoverflow.StackOverflowJobActivity
+import net.chrisfey.jobsearch.jobsearch.search.JobSearchViewModel.NavigationEvent
 import net.chrisfey.jobsearch.utils.*
-import net.chrisfey.jobsearch.view.detail.github.GitHubJobActivity
-import net.chrisfey.jobsearch.view.detail.stackoverflow.StackOverflowJobActivity
-import net.chrisfey.jobsearch.view.search.JobSearchViewModel.NavigationEvent
 import org.koin.android.ext.android.inject
 
 

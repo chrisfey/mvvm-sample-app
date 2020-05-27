@@ -1,4 +1,4 @@
-package net.chrisfey.jobsearch.view.search
+package net.chrisfey.jobsearch.jobsearch.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -50,8 +50,16 @@ class JobSearchViewModel(
 
     fun jobTapped(current: JobViewState) {
         when (current.source) {
-            is Source.StackOverflow -> _navigationEvent.postEvent(NavigationEvent.StackOverflowJobDetail(current.jobId))
-            is Source.Github -> _navigationEvent.postEvent(NavigationEvent.GithubJobDetail(current.jobId))
+            is Source.StackOverflow -> _navigationEvent.postEvent(
+                NavigationEvent.StackOverflowJobDetail(
+                    current.jobId
+                )
+            )
+            is Source.Github -> _navigationEvent.postEvent(
+                NavigationEvent.GithubJobDetail(
+                    current.jobId
+                )
+            )
         }
     }
 
@@ -84,7 +92,13 @@ sealed class JobSearchViewState {
     ) : JobSearchViewState() {
         fun jobs(): List<JobViewState> {
             val githubJobs = gtihubJobs?.map {
-                JobViewState(it.id, it.title, it.company, it.company_logo, Source.Github())
+                JobViewState(
+                    it.id,
+                    it.title,
+                    it.company,
+                    it.company_logo,
+                    Source.Github()
+                )
             } ?: emptyList()
             val stackOverflowJobs = stackOverflowJobs?.map {
                 JobViewState(
