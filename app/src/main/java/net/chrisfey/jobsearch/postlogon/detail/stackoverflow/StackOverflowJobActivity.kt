@@ -1,4 +1,4 @@
-package net.chrisfey.jobsearch.jobsearch.detail.stackoverflow
+package net.chrisfey.jobsearch.postlogon.detail.stackoverflow
 
 import android.content.Context
 import android.content.Intent

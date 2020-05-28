@@ -1,4 +1,4 @@
-package net.chrisfey.jobsearch.jobsearch.search
+package net.chrisfey.jobsearch.postlogon.search
 
 import android.content.Context
 import android.view.LayoutInflater

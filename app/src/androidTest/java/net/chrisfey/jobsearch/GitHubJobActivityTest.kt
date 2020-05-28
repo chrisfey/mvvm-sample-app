@@ -12,7 +12,7 @@ import io.reactivex.schedulers.Schedulers
 import net.chrisfey.jobsearch.data.JOB1
 import net.chrisfey.jobsearch.di.DaggerAppComponent
 import net.chrisfey.jobsearch.fakes.FakeGithubJobRepository
-import net.chrisfey.jobsearch.jobsearch.detail.github.GitHubJobActivity
+import net.chrisfey.jobsearch.postlogon.detail.github.GitHubJobActivity
 import net.chrisfey.jobsearch.repository.toGitHubJob
 import net.chrisfey.jobsearch.rx.RxSchedulers
 import org.junit.Before

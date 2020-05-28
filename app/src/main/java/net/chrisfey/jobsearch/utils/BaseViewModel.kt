@@ -21,6 +21,7 @@ open class BaseViewModel : ViewModel() {
     }
 
     fun sendCoordinatorEvent(event: Any) {
+        if (!coordinatorEvents.hasObservers()) throw Error("Coordinator events is not observed, did you inject your viewmodel with `by hostedViewModel()` ?")
         coordinatorEvents.postValue(event)
     }
 }

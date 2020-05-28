@@ -1,13 +1,14 @@
 package net.chrisfey.jobsearch.coordinator
 
 import android.app.Activity
-import net.chrisfey.jobsearch.jobsearch.search.JobSearchActivity
 import net.chrisfey.jobsearch.onboarding.OnboardingActivity
+import net.chrisfey.jobsearch.postlogon.PostLogonActivity
 
 
-class FeatureNavigator(val context: Activity) {
+class FeatureNavigator(val activity: Activity) {
 
-    fun showOnboardingFlow() = context.startActivity(OnboardingActivity.getIntent(context))
-    fun showJobSearchFlow() = context.startActivity(JobSearchActivity.getIntent(context))
+    fun showOnboardingFlow() = activity.startActivity(OnboardingActivity.getIntent(activity))
+
+    fun showPostLogonFlow() = activity.startActivity(PostLogonActivity.getIntent(activity))
 
 }

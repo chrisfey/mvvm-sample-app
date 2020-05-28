@@ -1,6 +1,5 @@
-package net.chrisfey.jobsearch.jobsearch.search
+package net.chrisfey.jobsearch.postlogon.search
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
@@ -11,20 +10,16 @@ import net.chrisfey.jobsearch.repository.IStackOverflowJobRepository
 import net.chrisfey.jobsearch.repository.StackOverflowJob
 import net.chrisfey.jobsearch.rx.RxSchedulers
 import net.chrisfey.jobsearch.utils.BaseViewModel
-import net.chrisfey.jobsearch.utils.Event
-import net.chrisfey.jobsearch.utils.EventMutableLiveData
 
-class JobSearchViewModel(
+class SearchViewModel(
     private val githubRepository: IGithubJobRepository,
     private val stackoverflowRepository: IStackOverflowJobRepository,
     private val schedulers: RxSchedulers
 ) : BaseViewModel() {
 
-    private val _viewState = MutableLiveData<JobSearchViewState>(JobSearchViewState.Initial)
-    private val _navigationEvent = EventMutableLiveData<NavigationEvent>()
+    val _viewState = MutableLiveData<JobSearchViewState>(JobSearchViewState.Initial)
 
-    fun viewState(): LiveData<JobSearchViewState> = _viewState
-    fun navigationEvents(): LiveData<Event<NavigationEvent>> = _navigationEvent
+    //fun viewState(): LiveData<JobSearchViewState> = _viewState
 
     fun searchJobs(description: String, location: String) {
         _viewState.postValue(JobSearchViewState.Loading)
@@ -50,22 +45,14 @@ class JobSearchViewModel(
 
     fun jobTapped(current: JobViewState) {
         when (current.source) {
-            is Source.StackOverflow -> _navigationEvent.postEvent(
-                NavigationEvent.StackOverflowJobDetail(
-                    current.jobId
-                )
-            )
-            is Source.Github -> _navigationEvent.postEvent(
-                NavigationEvent.GithubJobDetail(
-                    current.jobId
-                )
-            )
+            is Source.StackOverflow -> sendCoordinatorEvent(Event.ShowStackOverflowJobDetail(current.jobId))
+            is Source.Github -> sendCoordinatorEvent(Event.ShowGithubJobDetail(current.jobId))
         }
     }
 
-    sealed class NavigationEvent {
-        class StackOverflowJobDetail(val jobId: String) : NavigationEvent()
-        class GithubJobDetail(val jobId: String) : NavigationEvent()
+    sealed class Event {
+        class ShowStackOverflowJobDetail(val jobId: String) : Event()
+        class ShowGithubJobDetail(val jobId: String) : Event()
     }
 }
 

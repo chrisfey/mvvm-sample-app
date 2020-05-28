@@ -61,6 +61,7 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     //Retrofit
+    implementation("com.squareup.okhttp3:logging-interceptor:4.7.2")
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-jackson:$retrofit_version"

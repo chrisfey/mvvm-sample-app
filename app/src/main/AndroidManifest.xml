@@ -23,14 +23,11 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="net.chrisfey.jobsearch.jobsearch.search.JobSearchActivity"
+            android:name="net.chrisfey.jobsearch.postlogon.PostLogonActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name="net.chrisfey.jobsearch.jobsearch.detail.stackoverflow.StackOverflowJobActivity" />
-        <activity android:name="net.chrisfey.jobsearch.jobsearch.detail.github.GitHubJobActivity" />
-        <activity
-            android:name="net.chrisfey.jobsearch.onboarding.login.LoginFragment"
-            android:theme="@style/AppTheme.Dark"
-            android:windowSoftInputMode="adjustResize" />
+        <activity android:name="net.chrisfey.jobsearch.postlogon.detail.stackoverflow.StackOverflowJobActivity" />
+        <activity android:name="net.chrisfey.jobsearch.postlogon.detail.github.GitHubJobActivity" />
+
         <activity
             android:name="net.chrisfey.jobsearch.startup.StartupActivity"
             android:theme="@style/AppTheme.Dark">
@@ -39,7 +36,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".onboarding.OnboardingActivity" />
+        <activity
+            android:name=".onboarding.OnboardingActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

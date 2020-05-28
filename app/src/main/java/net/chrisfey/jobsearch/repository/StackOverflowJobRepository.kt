@@ -19,7 +19,7 @@ class StackOverflowJobRepository  (
     override fun searchJobs(description: String, location: String): Observable<List<StackOverflowJob>> =
         rssFeed.searchJobs(description, location)
             .map { rss -> rss.channel!!.item!! }
-            .map { it.take(10) }
+            .map { it.take(5) }
             .flatMap { list ->
                 Observable.fromIterable(list)
                     .flatMap { enrichWithImage(it) }

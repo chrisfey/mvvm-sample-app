@@ -1,4 +1,4 @@
-package net.chrisfey.jobsearch.jobsearch.detail.github
+package net.chrisfey.jobsearch.postlogon.detail.github
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

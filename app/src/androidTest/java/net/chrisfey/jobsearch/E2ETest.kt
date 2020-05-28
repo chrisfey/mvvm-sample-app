@@ -16,8 +16,8 @@ import net.chrisfey.jobsearch.data.JOB1
 import net.chrisfey.jobsearch.di.DaggerAppComponent
 import net.chrisfey.jobsearch.fakes.FakeGithubJobRepository
 import net.chrisfey.jobsearch.fakes.FakeStackOverflowRepository
-import net.chrisfey.jobsearch.jobsearch.search.JobListAdapter
-import net.chrisfey.jobsearch.jobsearch.search.JobSearchActivity
+import net.chrisfey.jobsearch.postlogon.PostLogonActivity
+import net.chrisfey.jobsearch.postlogon.search.JobListAdapter
 import net.chrisfey.jobsearch.repository.IGithubJobRepository
 import net.chrisfey.jobsearch.repository.IStackOverflowJobRepository
 import net.chrisfey.jobsearch.repository.toGitHubJob
@@ -65,7 +65,7 @@ class E2ETest {
         fakeGithubRepository.searchJobs = Single.just(listOf(JOB1).toGitHubJobs())
         fakeGithubRepository.viewJob = Single.just(JOB1.toGitHubJob())
 
-        ActivityScenario.launch(JobSearchActivity::class.java)
+        ActivityScenario.launch(PostLogonActivity::class.java)
         onView(withText("Try Searching")).check(matches(isDisplayed()))
 
 

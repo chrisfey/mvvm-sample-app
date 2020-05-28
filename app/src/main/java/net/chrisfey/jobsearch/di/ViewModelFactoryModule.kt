@@ -2,8 +2,8 @@ package net.chrisfey.jobsearch.di
 
 import dagger.Module
 import dagger.Provides
-import net.chrisfey.jobsearch.jobsearch.detail.github.GithubJobViewModelFactory
-import net.chrisfey.jobsearch.jobsearch.detail.stackoverflow.StackOverflowJobViewModelFactory
+import net.chrisfey.jobsearch.postlogon.detail.github.GithubJobViewModelFactory
+import net.chrisfey.jobsearch.postlogon.detail.stackoverflow.StackOverflowJobViewModelFactory
 import net.chrisfey.jobsearch.repository.IGithubJobRepository
 import net.chrisfey.jobsearch.repository.IStackOverflowJobRepository
 import net.chrisfey.jobsearch.rx.RxSchedulers

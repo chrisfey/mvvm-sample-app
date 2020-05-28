@@ -1,12 +1,5 @@
-package net.chrisfey.jobsearch.di
+package net.chrisfey.jobsearch.di.koin
 
-import android.app.Activity
-import com.google.firebase.auth.FirebaseAuth
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import net.chrisfey.jobsearch.coordinator.FeatureNavigator
-import net.chrisfey.jobsearch.jobsearch.search.JobSearchViewModel
-import net.chrisfey.jobsearch.onboarding.login.LoginViewModel
 import net.chrisfey.jobsearch.repository.GithubJobRepository
 import net.chrisfey.jobsearch.repository.IGithubJobRepository
 import net.chrisfey.jobsearch.repository.IStackOverflowJobRepository
@@ -15,37 +8,28 @@ import net.chrisfey.jobsearch.repository.networking.GithubJobHttpClient
 import net.chrisfey.jobsearch.repository.networking.StackOverflowRssFeedJobHttpClient
 import net.chrisfey.jobsearch.repository.networking.StackOverflowScreenScrapeJobHttpClient
 import net.chrisfey.jobsearch.rx.RxSchedulers
-import net.chrisfey.jobsearch.startup.StartupCoordinator
-import net.chrisfey.jobsearch.startup.StartupViewModel
 import net.chrisfey.jobsearch.utils.Jackson
 import okhttp3.OkHttpClient
-import org.koin.androidx.viewmodel.dsl.viewModel
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
+import timber.log.Timber
 
-val firebaseModule = module {
-    single { FirebaseAuth.getInstance() }
-}
-val viewModelModule = module {
-    single { (activity: Activity) -> StartupCoordinator(get(), FeatureNavigator(activity)) }
-    viewModel { StartupViewModel(get()) }
-    viewModel { JobSearchViewModel(get(), get(), get()) }
-    viewModel { LoginViewModel(get()) }
-}
-val rxModule = module {
-    single<RxSchedulers> {
-        object : RxSchedulers {
-            override fun computation() = Schedulers.computation()
-            override fun io() = Schedulers.io()
-            override fun ui() = AndroidSchedulers.mainThread()
-        }
+
+val networkModule = module {
+    single {
+        val logging = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
+            override fun log(message: String) {
+                Timber.tag("OkHttp").d(message)
+            }
+        })
+        OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .build()
     }
-}
-val networkModuleKoin = module {
-    single { OkHttpClient.Builder().build() }
     single<GithubJobHttpClient> {
         Retrofit.Builder()
             .client(get())
@@ -55,7 +39,11 @@ val networkModuleKoin = module {
             .build()
             .create(GithubJobHttpClient::class.java)
     }
-    single<IGithubJobRepository> { GithubJobRepository(get()) }
+    single<IGithubJobRepository> {
+        GithubJobRepository(
+            get()
+        )
+    }
     single<StackOverflowRssFeedJobHttpClient> {
         Retrofit.Builder()
             .client(get())

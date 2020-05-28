@@ -1,4 +1,4 @@
-package net.chrisfey.jobsearch.jobsearch.detail.stackoverflow
+package net.chrisfey.jobsearch.postlogon.detail.stackoverflow
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

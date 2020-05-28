@@ -18,8 +18,8 @@ import net.chrisfey.jobsearch.data.STACK_OVERFLOW_JOB2
 import net.chrisfey.jobsearch.di.DaggerAppComponent
 import net.chrisfey.jobsearch.fakes.FakeGithubJobRepository
 import net.chrisfey.jobsearch.fakes.FakeStackOverflowRepository
-import net.chrisfey.jobsearch.jobsearch.search.JobListAdapter
-import net.chrisfey.jobsearch.jobsearch.search.JobSearchActivity
+import net.chrisfey.jobsearch.postlogon.PostLogonActivity
+import net.chrisfey.jobsearch.postlogon.search.JobListAdapter
 import net.chrisfey.jobsearch.repository.IGithubJobRepository
 import net.chrisfey.jobsearch.repository.IStackOverflowJobRepository
 import net.chrisfey.jobsearch.repository.toGitHubJobs
@@ -32,7 +32,7 @@ import org.koin.dsl.module
 
 
 @RunWith(AndroidJUnit4::class)
-class JobSearchActivityTest {
+class PostLogonActivityTest {
 
     val fakeGithubRepository = FakeGithubJobRepository()
     val fakeStackOverflowRepository = FakeStackOverflowRepository()
@@ -63,7 +63,7 @@ class JobSearchActivityTest {
 
     @Test
     fun loadingState() {
-        ActivityScenario.launch(JobSearchActivity::class.java)
+        ActivityScenario.launch(PostLogonActivity::class.java)
 
         onView(withId(R.id.trySearchingTxt))
             .check(matches(withText("Try Searching")))
@@ -71,7 +71,7 @@ class JobSearchActivityTest {
 
     @Test
     fun searchNoJobs() {
-        ActivityScenario.launch(JobSearchActivity::class.java)
+        ActivityScenario.launch(PostLogonActivity::class.java)
         fakeGithubRepository.searchJobs = Single.just(listOf())
         onView(withId(R.id.descriptionEditText))
             .perform(typeText("java"))
@@ -87,7 +87,7 @@ class JobSearchActivityTest {
 
     @Test
     fun showJobsFromOneSource() {
-        ActivityScenario.launch(JobSearchActivity::class.java)
+        ActivityScenario.launch(PostLogonActivity::class.java)
         onView(withText("Try Searching")).check(matches(isDisplayed()))
 
         fakeGithubRepository.searchJobs = Single.just(listOf(JOB1).toGitHubJobs())
@@ -114,7 +114,7 @@ class JobSearchActivityTest {
 
     @Test
     fun showJobsFromMultipleSources() {
-        ActivityScenario.launch(JobSearchActivity::class.java)
+        ActivityScenario.launch(PostLogonActivity::class.java)
         onView(withText("Try Searching")).check(matches(isDisplayed()))
 
         fakeGithubRepository.searchJobs = Single.just(listOf(JOB1, JOB2).toGitHubJobs())

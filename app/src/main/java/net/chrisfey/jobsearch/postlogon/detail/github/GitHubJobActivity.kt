@@ -1,4 +1,4 @@
-package net.chrisfey.jobsearch.jobsearch.detail.github
+package net.chrisfey.jobsearch.postlogon.detail.github
 
 import android.content.Context
 import android.content.Intent
